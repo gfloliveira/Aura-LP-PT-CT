@@ -70,6 +70,16 @@
     .nav-links{display:flex;gap:44px;list-style:none;}
     .nav-links a{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--color-text-secondary);text-decoration:none;font-weight:500;transition:color .25s ease;}
     .nav-links a:hover{color:var(--color-text);}
+    .nav-links a.nav-link--active{color:var(--color-primary);}
+    /* scroll progress hairline under nav */
+    #navScrollLine{
+      position:fixed;top:var(--nav-h);left:0;
+      width:0%;height:1px;
+      background:var(--color-primary);
+      z-index:199;
+      pointer-events:none;
+      opacity:0;
+    }
     .nav-btn{font-family:var(--font-body);font-size:10px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--color-primary);border:1px solid var(--color-primary);background:transparent;padding:11px 28px;position:relative;overflow:hidden;transition:color .35s var(--ease-expo);}
     .nav-btn::before{content:'';position:absolute;inset:0;background:var(--color-primary);transform:scaleX(0);transform-origin:left;transition:transform .4s var(--ease-expo);}
     .nav-btn:hover{color:var(--color-bg);}
@@ -1368,25 +1378,26 @@
   <nav class="nav" id="nav">
     <a href="#" class="nav-logo">APEX<em>.</em></a>
     <ul class="nav-links">
-      <li><a href="#">Filosofia</a></li>
-      <li><a href="#">Programas</a></li>
-      <li><a href="#">Resultados</a></li>
-      <li><a href="#">Contato</a></li>
+      <li><a href="#manifesto" data-nav-target="manifesto">Filosofia</a></li>
+      <li><a href="#programs"  data-nav-target="programs">Programas</a></li>
+      <li><a href="#results"   data-nav-target="results">Resultados</a></li>
+      <li><a href="#ctaFinal"  data-nav-target="ctaFinal">Contato</a></li>
     </ul>
-    <button class="nav-btn"><span>Consulta Gratuita</span></button>
+    <button class="nav-btn" data-nav-target="ctaFinal"><span>Consulta Gratuita</span></button>
     <button class="nav-hamburger" id="navHamburger" aria-label="Abrir menu" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
   </nav>
+  <div id="navScrollLine"></div>
 
   <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
     <nav class="mobile-nav-links">
-      <a href="#" class="mobile-nav-link"><span class="mobile-nav-link-num">01</span>Filosofia</a>
-      <a href="#" class="mobile-nav-link"><span class="mobile-nav-link-num">02</span>Programas</a>
-      <a href="#" class="mobile-nav-link"><span class="mobile-nav-link-num">03</span>Resultados</a>
-      <a href="#" class="mobile-nav-link"><span class="mobile-nav-link-num">04</span>Contato</a>
+      <a href="#manifesto" data-nav-target="manifesto" class="mobile-nav-link"><span class="mobile-nav-link-num">01</span>Filosofia</a>
+      <a href="#programs"  data-nav-target="programs"  class="mobile-nav-link"><span class="mobile-nav-link-num">02</span>Programas</a>
+      <a href="#results"   data-nav-target="results"   class="mobile-nav-link"><span class="mobile-nav-link-num">03</span>Resultados</a>
+      <a href="#ctaFinal"  data-nav-target="ctaFinal"  class="mobile-nav-link"><span class="mobile-nav-link-num">04</span>Contato</a>
     </nav>
-    <button class="mobile-menu-cta" id="mobileMenuCta">INICIAR JORNADA</button>
+    <button class="mobile-menu-cta" id="mobileMenuCta" data-nav-target="ctaFinal">INICIAR JORNADA</button>
     <div class="mobile-menu-footer">
       <span>São Paulo, BR</span>
       <div class="mobile-menu-footer-line"></div>
@@ -2297,7 +2308,61 @@
     }
 
     hamburger.addEventListener('click', () => menuOpen ? closeMenu() : openMenu());
-    mobileLinks.forEach(l => l.addEventListener('click', closeMenu));
+
+    /* ─── SMOOTH NAV SCROLL ──────────────────────────────────────────────────
+       Intercepta todos os [data-nav-target] e faz scroll suave via Lenis.
+       Flash: link pisca em laranja + hairline sob o nav varre 0→100%.
+    ─────────────────────────────────────────────────────────────────────── */
+    const scrollLine = document.getElementById('navScrollLine');
+
+    function navScrollTo(targetId, originEl) {
+      const target = document.getElementById(targetId);
+      if (!target) return;
+
+      /* feedback visual: elemento clicado pisca em laranja */
+      if (originEl) {
+        gsap.fromTo(originEl,
+          { color: 'var(--color-primary)' },
+          { color: '', duration: 0.6, ease: 'power2.out', delay: 0.05 }
+        );
+      }
+
+      /* hairline laranja varre sob o nav */
+      gsap.killTweensOf(scrollLine);
+      gsap.set(scrollLine, { width: '0%', opacity: 1 });
+      gsap.to(scrollLine, {
+        width: '100%', duration: 0.9, ease: 'power2.inOut',
+        onComplete() {
+          gsap.to(scrollLine, { opacity: 0, duration: 0.3,
+            onComplete() { gsap.set(scrollLine, { width: '0%' }); }
+          });
+        }
+      });
+
+      /* scroll via Lenis — decelera naturalmente */
+      lenis.scrollTo(target, {
+        duration: 1.4,
+        easing: t => 1 - Math.pow(1 - t, 4),   /* quartic ease-out */
+        offset: 0,
+        lock: false
+      });
+    }
+
+    /* Desktop nav links + nav-btn */
+    document.querySelectorAll('[data-nav-target]').forEach(el => {
+      el.addEventListener('click', e => {
+        e.preventDefault();
+        const targetId = el.dataset.navTarget;
+
+        if (menuOpen) {
+          /* mobile: fecha menu, depois scrolla */
+          closeMenu();
+          setTimeout(() => navScrollTo(targetId, el), 620);
+        } else {
+          navScrollTo(targetId, el);
+        }
+      });
+    });
 
     /* ═══════════════════════════════════════════════════════════════════════
        SESSÃO 02 — A FILOSOFIA
