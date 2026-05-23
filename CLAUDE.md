@@ -114,15 +114,11 @@ CLAUDE.md      — este arquivo
 ### ✅ Sessão 03 — Programas de Treinamento (CONCLUÍDA)
 
 **Layout:**
-- Desktop: seção pinned com scroll horizontal via GSAP ScrollTrigger
-- Mobile: `overflow-x: scroll` nativo com `scroll-snap-type: x mandatory`
+- Desktop: 3 cards `position:sticky; top:0; height:100vh` em container `300vh`
+- Mobile: cards verticais com ScrollTrigger por card
 
 **Componentes construídos:**
 - Intro animada (eyebrow + título outline + descrição, stagger via ScrollTrigger)
-- `.programs-pin-wrap` pinned quando toca o topo da viewport
-- `.programs-track` move `x: 0 → -totalMove` com `scrub: 1.2`
-  - `totalMove` calculado dinamicamente: `(cards.length - 1) * (cardW + gap)`
-  - `end: '+=' + (totalMove + innerHeight * 0.8)`
 - **Layout: Full Viewport Stacked** — cada card é `position:sticky; top:0; height:100vh`
 - 3 cards empilhados com z-index crescente (01→1, 02→2, 03→3)
 - Card seguinte desliza por cima do anterior conforme scroll (efeito cover natural)
@@ -131,17 +127,43 @@ CLAUDE.md      — este arquivo
 - Card Elite: badge "Exclusivo" com dot pulsante, gradiente mais intenso
 - Contador `01 / 03` fixo no canto superior direito de cada card
 - Número watermark gigante no canto inferior direito
-- Background: gradientes placeholder (substituir por imagens Gemini/Imagen quando prontas)
-- Mobile: `position:relative`, cards empilhados verticalmente, animações desativadas
+- Backgrounds reais: `assets/prog-01.png`, `assets/prog-02.png`, `assets/prog-03.png`
+- Overlay gradiente: esquerda→transparente (desktop) / topo→baixo (mobile)
+- Mobile: `position:relative`, animações por ScrollTrigger (toggleActions play/reverse)
+
+**Imagens em `assets/`:**
+- `prog-01.png` — atleta com barra (Hipertrofia)
+- `prog-02.png` — atleta correndo (Resistência)
+- `prog-03.png` — retrato atleta (Elite)
+
+---
+
+### ✅ Sessão 04 — Resultados / Prova Social (CONCLUÍDA)
+
+**Layout:**
+- Intro centralizada + stats strip 4 colunas + marquee duplo
+- Mobile: stats grid 2×2, cards menores (280px), animações ajustadas
+
+**Componentes construídos:**
+- `.results-intro`: eyebrow com linha, título, descrição — animações ScrollTrigger (opacity + translateY)
+- `.results-stats`: 4 contadores animados com count-up via `gsap.to({val:0}, {val:target})`
+  - Formato: `toLocaleString('pt-BR')` para números ≥ 1000 (ex: 4.200)
+  - Stats: 4.200 alunos / 98% satisfação / 340 transformações / 7 anos
+- `.results-marquee`: 2 linhas de depoimentos em loop infinito (CSS `@keyframes`)
+  - Linha 1 (`mqLeft`): `translateX(0 → -50%)`, 52s
+  - Linha 2 (`mqRight`): `translateX(-50% → 0)`, 48s
+  - Hover pausa a animação (`animation-play-state: paused`)
+  - 8 depoimentos por linha × 2 duplicatas = loop seamless
+- `.test-card`: cards 360px com avatar colorido, nome, resultado em laranja, texto, tag
+- Fade-in geral do marquee via ScrollTrigger
+
+**Técnica marquee:**
+- HTML duplicado (conteúdo × 2) dentro de `.marquee-track` (width: max-content)
+- CSS anima de 0 → -50% (= 1× set original), loop instantâneo cria ilusão de infinito
 
 ---
 
 ### 🔲 Sessões Pendentes
-
-**Sessão 04 — Resultados / Prova Social (Galeria)**
-- Slider infinito e suave de depoimentos ou antes/depois
-- Parallax suave nas imagens dentro dos cartões
-- Possível uso de imagens geradas via Gemini/Imagen (pré-geradas manualmente)
 
 **Sessão 05 — Footer e CTA Final**
 - Título colossal "COMECE AGORA"
@@ -160,8 +182,8 @@ CLAUDE.md      — este arquivo
 - **`overflow: clip`** (não `hidden`) em seções com `position: sticky` descendente
 - **`align-items: start`** obrigatório no grid quando há coluna com `position: sticky`
 - **`isMobile`** = `window.innerWidth < 768`, calculado uma vez no load — usado para desabilitar GSAP pin e parallax em touch
+- **`filter` em sticky element** quebra z-index stacking — sempre aplicar em `.prog-card-inner`, não em `.prog-card`
 - Para trocar a foto do atleta: substituir `src="athlete.png"` em `#athleteRaw` — todo o canvas processing (hero + manifesto) funciona automaticamente
 
 ## Próxima Ação Sugerida
-Iniciar a **Sessão 04 (Resultados / Prova Social)** — slider de depoimentos com parallax.
-Antes: revisar e ajustar a Sessão 03 conforme feedback do usuário.
+Iniciar a **Sessão 05 (Footer e CTA Final)** — título colossal "COMECE AGORA", mask reveal, links sociais animados.
