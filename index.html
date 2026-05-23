@@ -220,14 +220,17 @@
     }
     @keyframes lightPulse{0%,100%{opacity:.6}50%{opacity:1}}
 
-    /* Silhouette figure (CSS-drawn) */
-    .athlete-figure{
+    /* Athlete photo canvas */
+    .athlete-img{
       position:absolute;
-      bottom:8%;left:50%;transform:translateX(-50%);
-      width:220px;height:480px;
-      opacity:.07;
+      bottom:0;left:50%;
+      transform:translateX(-50%);
+      height:96%;width:auto;
+      max-width:88%;
+      object-fit:contain;
+      z-index:2;
+      filter:contrast(1.1) brightness(0.82) saturate(0.78);
     }
-    .athlete-figure svg{width:100%;height:100%;}
 
     /* Scan line effect */
     .athlete-scanlines{
@@ -359,7 +362,7 @@
       .athlete-container{height:100%;max-height:none;}
       .athlete-fade-left{display:none;}
       .athlete-fade-top{height:8%;}
-      .athlete-figure{width:160px;height:340px;}
+      .athlete-img{height:100%;max-width:72%;}
 
       .hero-left{
         flex:0 0 auto;width:100%;
@@ -489,37 +492,9 @@
           <div class="athlete-ph">
             <div class="athlete-light"></div>
 
-            <!-- Replace with <img src="athlete.jpg" ...> when photo is ready -->
-            <div class="athlete-figure">
-              <svg viewBox="0 0 220 480" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <!-- Head -->
-                <circle cx="110" cy="46" r="30" fill="white"/>
-                <!-- Neck -->
-                <rect x="100" y="72" width="20" height="20" rx="4" fill="white"/>
-                <!-- Torso -->
-                <path d="M62 95 C72 88 90 84 110 83 C130 84 148 88 158 95 L162 210 C148 218 130 222 110 222 C90 222 72 218 58 210 Z" fill="white"/>
-                <!-- Left arm -->
-                <path d="M64 100 C48 118 38 150 34 188 L50 192 C52 162 60 136 76 118 Z" fill="white"/>
-                <!-- Right arm -->
-                <path d="M156 100 C172 118 182 150 186 188 L170 192 C168 162 160 136 144 118 Z" fill="white"/>
-                <!-- Left forearm -->
-                <path d="M34 188 C30 208 32 232 40 252 L54 248 C48 230 46 210 50 192 Z" fill="white"/>
-                <!-- Right forearm -->
-                <path d="M186 188 C190 208 188 232 180 252 L166 248 C172 230 174 210 170 192 Z" fill="white"/>
-                <!-- Left thigh -->
-                <path d="M74 216 C68 252 66 288 70 324 L90 324 C88 290 88 256 92 220 Z" fill="white"/>
-                <!-- Right thigh -->
-                <path d="M146 216 C152 252 154 288 150 324 L130 324 C132 290 132 256 128 220 Z" fill="white"/>
-                <!-- Left shin -->
-                <path d="M70 324 C68 356 70 392 76 420 L94 418 C90 392 88 358 90 324 Z" fill="white"/>
-                <!-- Right shin -->
-                <path d="M150 324 C152 356 150 392 144 420 L126 418 C130 392 132 358 130 324 Z" fill="white"/>
-                <!-- Left foot -->
-                <path d="M76 420 C72 432 68 444 64 452 L88 454 C90 444 92 432 94 418 Z" fill="white"/>
-                <!-- Right foot -->
-                <path d="M144 420 C148 432 152 444 156 452 L132 454 C130 444 128 432 126 418 Z" fill="white"/>
-              </svg>
-            </div>
+            <!-- Athlete photo: swap src here when using the real photo -->
+            <img id="athleteRaw" src="athlete.png" alt="" style="display:none" crossorigin="anonymous" />
+            <canvas id="athleteCanvas" class="athlete-img"></canvas>
 
             <div class="athlete-scanlines"></div>
             <div class="athlete-glow-ring"></div>
@@ -614,10 +589,10 @@
     function resize() {
       W = canvas.width  = canvas.offsetWidth  || window.innerWidth;
       H = canvas.height = canvas.offsetHeight || window.innerHeight;
-      /* Convergence target = center of athlete panel */
-      const rightPanelCenter = isMobile ? W * 0.5 : W * 0.77;
-      flowState.tx = rightPanelCenter;
-      flowState.ty = H * 0.52;
+      /* On mobile the athlete panel sits at the TOP (~52vw tall).
+         On desktop it sits in the right 46% of the viewport.          */
+      flowState.tx = isMobile ? W * 0.5  : W * 0.77;
+      flowState.ty = isMobile ? H * 0.14 : H * 0.52;
     }
 
     /* Lightweight sin-based 2D noise — organic but fast */
@@ -715,6 +690,65 @@
         }
       }
     }
+
+    /* ─── ATHLETE IMAGE — flood-fill white background removal ──────────────── */
+    function removeWhiteBg(img) {
+      const ac  = document.getElementById('athleteCanvas');
+      if (!ac) return;
+      const ctx2 = ac.getContext('2d');
+      const IW = img.naturalWidth, IH = img.naturalHeight;
+      ac.width = IW; ac.height = IH;
+      ctx2.drawImage(img, 0, 0);
+
+      const imageData = ctx2.getImageData(0, 0, IW, IH);
+      const d = imageData.data;
+      const visited = new Uint8Array(IW * IH);
+      const queue   = [];
+
+      /* Pixel is "background" if very close to white */
+      const isBg = i => d[i] > 232 && d[i+1] > 232 && d[i+2] > 232;
+
+      /* Seed queue from all four edges */
+      for (let x = 0; x < IW; x++) { queue.push(x, 0); queue.push(x, IH - 1); }
+      for (let y = 1; y < IH - 1; y++) { queue.push(0, y); queue.push(IW - 1, y); }
+
+      /* Iterative 4-connected flood fill */
+      while (queue.length) {
+        const y = queue.pop(), x = queue.pop();
+        if (x < 0 || x >= IW || y < 0 || y >= IH) continue;
+        const pi = y * IW + x;
+        if (visited[pi]) continue;
+        visited[pi] = 1;
+        const di = pi * 4;
+        if (!isBg(di)) continue;
+        d[di + 3] = 0; /* transparent */
+        queue.push(x + 1, y, x - 1, y, x, y + 1, x, y - 1);
+      }
+
+      /* Soften jagged edges with a one-pixel alpha fade on semi-white anti-alias pixels */
+      for (let i = 0; i < d.length; i += 4) {
+        if (d[i+3] === 0) continue; /* already transparent */
+        if (d[i] > 210 && d[i+1] > 210 && d[i+2] > 210) {
+          /* near-white non-background pixel → fade alpha proportionally */
+          const whiteness = (d[i] + d[i+1] + d[i+2]) / 3;
+          d[i+3] = Math.round(d[i+3] * (1 - (whiteness - 210) / 45));
+        }
+      }
+
+      ctx2.putImageData(imageData, 0, 0);
+    }
+
+    function initAthleteImage() {
+      const img = document.getElementById('athleteRaw');
+      if (!img) return;
+      if (img.complete && img.naturalWidth) {
+        removeWhiteBg(img);
+      } else {
+        img.onload = () => removeWhiteBg(img);
+        img.onerror = () => console.warn('Athlete image not found.');
+      }
+    }
+    initAthleteImage();
 
     /* Init & animate */
     function initFlow() {
