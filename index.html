@@ -688,36 +688,33 @@
       position:absolute;inset:0;z-index:0;
     }
     .prog-card--01 .prog-card-bg{
-      background:
-        radial-gradient(ellipse 55% 70% at 78% 50%,rgba(255,69,0,.13) 0%,transparent 58%),
-        radial-gradient(ellipse 28% 38% at 88% 82%,rgba(255,69,0,.07) 0%,transparent 50%),
-        linear-gradient(135deg,#0A0A0A 0%,#111111 40%,#0E0B0A 100%);
+      background:url('assets/prog-01.png') center/cover no-repeat;
     }
     .prog-card--02 .prog-card-bg{
-      background:
-        radial-gradient(ellipse 50% 65% at 74% 46%,rgba(255,69,0,.11) 0%,transparent 58%),
-        radial-gradient(ellipse 22% 32% at 85% 16%,rgba(255,100,0,.06) 0%,transparent 45%),
-        linear-gradient(135deg,#0A0A0A 0%,#0C0C0E 40%,#0A0A0D 100%);
+      background:url('assets/prog-02.png') center 30%/cover no-repeat;
     }
     .prog-card--03 .prog-card-bg{
-      background:
-        radial-gradient(ellipse 65% 80% at 76% 50%,rgba(255,69,0,.20) 0%,transparent 55%),
-        radial-gradient(ellipse 25% 30% at 92% 18%,rgba(255,110,0,.10) 0%,transparent 40%),
-        radial-gradient(ellipse 30% 40% at 88% 88%,rgba(200,50,0,.06) 0%,transparent 45%),
-        linear-gradient(135deg,#040404 0%,#0A0808 40%,#080505 100%);
+      background:url('assets/prog-03.png') center/cover no-repeat;
     }
 
     /* Gradient overlay: left dark → transparent right (text readability) */
     .prog-card-overlay{
       position:absolute;inset:0;z-index:1;
-      background:linear-gradient(
-        to right,
-        rgba(10,10,10,1) 0%,
-        rgba(10,10,10,.93) 26%,
-        rgba(10,10,10,.62) 46%,
-        rgba(10,10,10,.20) 65%,
-        transparent 82%
-      );
+      background:
+        linear-gradient(
+          to right,
+          rgba(8,8,8,1) 0%,
+          rgba(8,8,8,.97) 22%,
+          rgba(8,8,8,.80) 40%,
+          rgba(8,8,8,.40) 58%,
+          rgba(8,8,8,.10) 72%,
+          transparent 86%
+        ),
+        linear-gradient(
+          to top,
+          rgba(8,8,8,.5) 0%,
+          transparent 30%
+        );
     }
 
     /* Content — left-aligned */
@@ -889,11 +886,17 @@
       .prog-stat:nth-child(3),.prog-stat:nth-child(4){border-bottom:none;}
       .prog-stat:nth-child(even){border-right:none;}
 
-      /* Override initial hidden states — no scroll animations on mobile */
-      .prog-level-row,.prog-card-name,.prog-stats-row,.prog-intensity,.prog-cta-row,.prog-exclusive{
-        opacity:1 !important;transform:none !important;
+      /* Mobile overlay: top/bottom dark fade, center opens to show image */
+      .prog-card-overlay{
+        background:
+          linear-gradient(to bottom,
+            rgba(8,8,8,.95) 0%,
+            rgba(8,8,8,.60) 28%,
+            rgba(8,8,8,.50) 55%,
+            rgba(8,8,8,.80) 78%,
+            rgba(8,8,8,1) 100%
+          );
       }
-      .prog-level-line{width:32px !important;}
     }
 
     @media(max-width:390px){
@@ -1819,8 +1822,6 @@
         scrollTrigger:{ trigger:'.programs-intro', start:'top 70%', toggleActions:'play none none reverse' }
       });
 
-      if (isMobile) return; /* mobile: position:relative cards, no animations */
-
       /* ── Content entrance animation per card ── */
       function animateCardIn(n) {
         const tl = gsap.timeline({ defaults:{ ease:'power3.out' } });
@@ -1843,7 +1844,21 @@
         gsap.set(`#prog0${n}Cta`,    { opacity:0, y:16 });
       }
 
-      /* Card 1 animates when section enters viewport */
+      if (isMobile) {
+        /* Mobile: cards scroll normally — trigger each on enter */
+        [1, 2, 3].forEach(n => {
+          ScrollTrigger.create({
+            trigger: `#progCard0${n}`,
+            start: 'top 78%',
+            toggleActions: 'play none none reverse',
+            onEnter:     () => animateCardIn(n),
+            onLeaveBack: () => resetCardIn(n)
+          });
+        });
+        return;
+      }
+
+      /* Desktop: card 1 when section enters */
       ScrollTrigger.create({
         trigger: '#programsStack',
         start: 'top 80%',
@@ -1851,7 +1866,7 @@
         onLeaveBack: () => resetCardIn(1)
       });
 
-      /* Cards 2 & 3: animate when they reach top (become active card) */
+      /* Desktop: cards 2 & 3 when they become the top sticky card */
       [2, 3].forEach(n => {
         ScrollTrigger.create({
           trigger: `#progCard0${n}`,
@@ -1861,7 +1876,7 @@
         });
       });
 
-      /* Scale-back effect on cards being covered by the next */
+      /* Scale-back on cards being covered */
       gsap.to('#progInner01', {
         scale: .96, filter: 'brightness(0.65)',
         ease: 'none',
