@@ -60,7 +60,7 @@
 
     /* ─── NAV ───────────────────────────────────────────────────────────────── */
     .nav{
-      position:fixed;top:0;left:0;right:0;height:var(--nav-h);z-index:100;
+      position:fixed;top:0;left:0;right:0;height:var(--nav-h);z-index:200;
       padding:0 56px;display:flex;align-items:center;justify-content:space-between;
       opacity:0;
     }
@@ -2164,6 +2164,10 @@
         loaderPct.textContent  = n + '%';
       },
       onComplete() {
+        /* Split + hide chars BEFORE loader exits — prevents FOUC flash */
+        splitChars(document.getElementById('heroTitle'));
+        gsap.set('.char', { y: '110%', rotateX: -80, opacity: 0 });
+
         gsap.to(loader, {
           yPercent: -100, duration: 1.1, ease: 'power4.inOut',
           onComplete() { loader.remove(); runIntro(); }
@@ -2192,8 +2196,6 @@
 
     /* ─── INTRO TIMELINE ────────────────────────────────────────────────────── */
     function runIntro() {
-      splitChars(document.getElementById('heroTitle'));
-
       const tl = gsap.timeline({ defaults: { ease: 'power4.out' } });
 
       /* Nav */
