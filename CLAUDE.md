@@ -8,8 +8,7 @@ Stack: HTML + CSS + Vanilla JS (sem framework). Tudo em arquivo único `index.ht
 ## Repositório
 - GitHub: `gfloliveira/Aura-LP-PT-CT`
 - Branch de trabalho: `claude/lp-ct-KMlrW`
-- Branch local: `claude/oi-KMlrW` (tracking → `origin/claude/lp-ct-KMlrW`)
-- Push sempre com: `git push origin claude/oi-KMlrW:claude/lp-ct-KMlrW`
+- Push sempre com: `git push origin HEAD:claude/lp-ct-KMlrW`
 - GitHub Pages ativo em: `https://gfloliveira.github.io/Aura-LP-PT-CT/`
 
 ## Arquivos do Projeto
@@ -89,25 +88,64 @@ CLAUDE.md      — este arquivo
 
 ---
 
-### 🔲 Sessões Pendentes (escopo original do projeto)
+### ✅ Sessão 02 — A Filosofia / Manifesto (CONCLUÍDA)
 
-**Sessão 02 — A Filosofia (Manifesto do Treinador)**
-- Layout minimalista, foto P&B do treinador em alto contraste
-- Efeito scrub GSAP: texto do manifesto revela palavra por palavra conforme scroll
-- Opacidade 20% → 100% conforme entra no centro da tela
+**Layout:**
+- Desktop: grid 46% (foto sticky) / 54% (texto scrollável), `min-height: 220vh`
+- Mobile: coluna única — foto no topo (62vw), texto abaixo
+- `overflow: clip` no `.manifesto` (não `hidden` — quebraria o `position: sticky`)
+- `align-items: start` no grid — obrigatório para sticky funcionar
 
-**Sessão 03 — Programas de Treinamento (Horizontal Scroll)**
-- Cartões: Hipertrofia / Resistência / Elite
-- Scroll vertical converte em horizontal (seção pinned via ScrollTrigger)
-- Efeito glow/neon laranja ao focar no cartão
+**Componentes construídos:**
+- Foto P&B do treinador: mesma `athlete.png`, processada via canvas com:
+  - Flood-fill para remoção de fundo branco
+  - Grayscale + S-curve de contraste + darken a 68%
+- Coluna da foto sticky (`position: sticky; top: 0; height: 100vh`)
+- Reveal da foto: `clip-path: inset(100% 0 0 0 → 0%)` via ScrollTrigger
+- Texto do manifesto: palavras em `<span class="m-word">`, scrub GSAP
+  - Opacidade 8% → 100% palavra por palavra conforme scroll
+- Header, título e assinatura com animações de entrada (opacity + translateY)
+- Número gigante de fundo (`02`) em opacidade mínima
+
+**Personagem:** Carlos Mendes — Fundador & Head Coach
+
+---
+
+### ✅ Sessão 03 — Programas de Treinamento (CONCLUÍDA)
+
+**Layout:**
+- Desktop: seção pinned com scroll horizontal via GSAP ScrollTrigger
+- Mobile: `overflow-x: scroll` nativo com `scroll-snap-type: x mandatory`
+
+**Componentes construídos:**
+- Intro animada (eyebrow + título outline + descrição, stagger via ScrollTrigger)
+- `.programs-pin-wrap` pinned quando toca o topo da viewport
+- `.programs-track` move `x: 0 → -totalMove` com `scrub: 1.2`
+  - `totalMove` calculado dinamicamente: `(cards.length - 1) * (cardW + gap)`
+  - `end: '+=' + (totalMove + innerHeight * 0.8)`
+- 3 cartões: Hipertrofia / Resistência / Elite
+  - Card ativo: `scale(1)`, `opacity: 1`, glow border laranja (`.prog-card::after`)
+  - Cards inativos: `scale(0.86)`, `opacity: 0.35`
+  - `setActive(idx)` via GSAP tween com `overwrite: true`
+- HUD: label + counter `01 / 03` que atualiza em tempo real
+- Progress bar na base da seção (`.programs-progress-fill`)
+- Card Elite: badge "Exclusivo" com dot pulsante
+- Grid de stats 2×2 por card (sessões/sem, duração, ciclo, ganho médio)
+- Barra de intensidade com 5 pips (3/5, 4/5, 5/5)
+- Padding dinâmico no track para centralizar cards: `calc(50vw - cardWidth/2)`
+
+---
+
+### 🔲 Sessões Pendentes
 
 **Sessão 04 — Resultados / Prova Social (Galeria)**
 - Slider infinito e suave de depoimentos ou antes/depois
 - Parallax suave nas imagens dentro dos cartões
+- Possível uso de imagens geradas via Gemini/Imagen (pré-geradas manualmente)
 
 **Sessão 05 — Footer e CTA Final**
 - Título colossal "COMECE AGORA"
-- Mask reveal: footer parece ser desocultado pela seção anterior
+- Mask reveal: footer desocultado pela seção anterior
 - Links sociais com hover de sublinhado animado
 
 ---
@@ -116,10 +154,14 @@ CLAUDE.md      — este arquivo
 
 - **`cursor: none`** apenas em `@media(hover:hover)and(pointer:fine)` — não quebra mobile
 - **`min-height: 100dvh`** com fallback `100vh` para address bar dinâmica em mobile
-- **Canvas do flow field** começa a rodar imediatamente (antes do loader fechar) — quando a hero aparece o campo já está vivo
-- **Flood-fill** usa fila iterativa (não recursiva) para evitar stack overflow em imagens grandes
+- **Canvas do flow field** começa a rodar imediatamente (antes do loader fechar)
+- **Flood-fill** usa fila iterativa (não recursiva) para evitar stack overflow
 - **`lenis.stop()`** durante menu mobile aberto, `lenis.start()` ao fechar
-- Para trocar a foto do atleta: substituir `src="athlete.png"` em `#athleteRaw` — o canvas processing e o reveal funcionam automaticamente
+- **`overflow: clip`** (não `hidden`) em seções com `position: sticky` descendente
+- **`align-items: start`** obrigatório no grid quando há coluna com `position: sticky`
+- **`isMobile`** = `window.innerWidth < 768`, calculado uma vez no load — usado para desabilitar GSAP pin e parallax em touch
+- Para trocar a foto do atleta: substituir `src="athlete.png"` em `#athleteRaw` — todo o canvas processing (hero + manifesto) funciona automaticamente
 
 ## Próxima Ação Sugerida
-Iniciar a **Sessão 02 (Manifesto)** com scroll-triggered text reveal usando GSAP ScrollTrigger scrub.
+Iniciar a **Sessão 04 (Resultados / Prova Social)** — slider de depoimentos com parallax.
+Antes: revisar e ajustar a Sessão 03 conforme feedback do usuário.
