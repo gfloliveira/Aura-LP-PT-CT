@@ -390,6 +390,240 @@
       .nav::after{left:20px;right:20px;}
       .hero-title{font-size:clamp(44px,13vw,50px);}
     }
+
+    /* ═══ SESSÃO 02 — MANIFESTO ════════════════════════════════════════════════ */
+
+    .manifesto{
+      position:relative;
+      background:var(--color-bg);
+      overflow:hidden;
+    }
+
+    /* Giant watermark number */
+    .manifesto-bg-num{
+      position:absolute;
+      top:50%;right:-2%;
+      transform:translateY(-50%);
+      font-family:var(--font-display);
+      font-size:clamp(180px,28vw,380px);
+      font-weight:700;
+      color:rgba(242,242,242,0.025);
+      line-height:1;
+      pointer-events:none;
+      user-select:none;
+      z-index:0;
+    }
+
+    /* Top separator */
+    .manifesto-separator{
+      width:100%;height:1px;
+      background:linear-gradient(to right,transparent,var(--color-border) 20%,var(--color-border) 80%,transparent);
+    }
+
+    .manifesto-inner{
+      display:grid;
+      grid-template-columns:46% 54%;
+      min-height:220vh; /* scroll space for scrub */
+      position:relative;
+      z-index:1;
+    }
+
+    /* ── PHOTO COLUMN (sticky) ─────────────────────────────────────────────── */
+    .manifesto-photo-col{
+      position:sticky;
+      top:0;
+      height:100vh;
+      display:flex;
+      align-items:center;
+      padding:0 0 0 56px;
+    }
+
+    .manifesto-photo-wrap{
+      position:relative;
+      width:100%;
+      height:82vh;
+      max-height:780px;
+      overflow:hidden;
+      clip-path:inset(100% 0 0 0);
+    }
+
+    .manifesto-photo-img{
+      position:absolute;
+      bottom:0;left:50%;
+      transform:translateX(-50%);
+      height:96%;width:auto;
+      max-width:90%;
+      z-index:1;
+    }
+
+    /* Gradient fades to blend with bg */
+    .manifesto-photo-fade-b{
+      position:absolute;bottom:0;left:0;right:0;
+      height:38%;
+      background:linear-gradient(to top,var(--color-bg),transparent);
+      z-index:2;pointer-events:none;
+    }
+    .manifesto-photo-fade-r{
+      position:absolute;top:0;bottom:0;right:0;
+      width:22%;
+      background:linear-gradient(to right,transparent,var(--color-bg));
+      z-index:2;pointer-events:none;
+    }
+    .manifesto-photo-fade-t{
+      position:absolute;top:0;left:0;right:0;
+      height:12%;
+      background:linear-gradient(to bottom,var(--color-bg),transparent);
+      z-index:2;pointer-events:none;
+    }
+
+    /* Orange accent on left edge */
+    .manifesto-photo-accent{
+      position:absolute;left:0;top:20%;bottom:20%;
+      width:2px;
+      background:linear-gradient(to bottom,transparent,var(--color-primary) 35%,var(--color-primary) 65%,transparent);
+      opacity:.55;z-index:3;
+    }
+
+    /* Photographer-style label */
+    .manifesto-photo-label{
+      position:absolute;bottom:28px;left:20px;
+      z-index:4;display:flex;flex-direction:column;gap:5px;
+    }
+    .manifesto-photo-name{
+      font-family:var(--font-display);
+      font-size:17px;font-weight:600;
+      letter-spacing:2.5px;text-transform:uppercase;
+      color:var(--color-text);
+    }
+    .manifesto-photo-role{
+      font-size:8.5px;letter-spacing:3px;
+      text-transform:uppercase;color:var(--color-primary);
+      font-weight:500;
+    }
+
+    /* ── TEXT COLUMN ──────────────────────────────────────────────────────── */
+    .manifesto-text-col{
+      padding:18vh 56px 18vh 64px;
+      display:flex;flex-direction:column;
+      justify-content:center;gap:44px;
+    }
+
+    /* Section header */
+    .manifesto-header{
+      display:flex;align-items:center;gap:18px;
+      opacity:0;transform:translateY(16px);
+    }
+    .manifesto-rule{
+      display:block;width:0;height:1px;
+      background:var(--color-primary);flex-shrink:0;
+    }
+    .manifesto-section-label{
+      font-size:10px;letter-spacing:4px;
+      text-transform:uppercase;color:var(--color-primary);font-weight:600;
+    }
+    .manifesto-section-num{
+      font-family:var(--font-display);
+      font-size:10px;letter-spacing:3px;
+      color:var(--color-text-muted);margin-left:auto;
+    }
+
+    /* Title */
+    .manifesto-title{
+      font-family:var(--font-display);
+      font-size:clamp(44px,5.8vw,94px);
+      font-weight:700;line-height:.9;
+      letter-spacing:-2px;text-transform:uppercase;
+      display:flex;flex-direction:column;gap:6px;
+      opacity:0;transform:translateY(36px);
+    }
+    .manifesto-title-outline{
+      -webkit-text-stroke:1.5px rgba(242,242,242,.22);
+      color:transparent;
+    }
+    .manifesto-title-accent{color:var(--color-primary);}
+
+    /* Quote mark */
+    .manifesto-quote-mark{
+      font-family:var(--font-display);
+      font-size:clamp(80px,10vw,140px);
+      line-height:.7;
+      color:var(--color-primary);
+      opacity:.18;
+      display:block;
+      margin-bottom:-16px;
+    }
+
+    /* Body text — words start dim */
+    .manifesto-body{
+      display:flex;flex-direction:column;gap:24px;
+    }
+    .manifesto-body p{
+      font-size:clamp(15px,1.45vw,21px);
+      line-height:1.8;
+      color:var(--color-text-secondary);
+      font-weight:300;
+    }
+    .m-word{
+      display:inline-block;
+      opacity:.08;
+      will-change:opacity;
+    }
+
+    /* Signature */
+    .manifesto-signature{
+      display:flex;align-items:center;gap:24px;
+      opacity:0;transform:translateY(16px);
+      padding-top:8px;
+    }
+    .manifesto-sig-line{
+      display:block;width:0;height:1px;
+      background:var(--color-border);flex-shrink:0;
+    }
+    .manifesto-sig-info{display:flex;flex-direction:column;gap:5px;}
+    .manifesto-sig-name{
+      font-family:var(--font-display);
+      font-size:17px;font-weight:600;
+      letter-spacing:2px;text-transform:uppercase;
+      color:var(--color-text);
+    }
+    .manifesto-sig-role{
+      font-size:9px;letter-spacing:2.5px;
+      text-transform:uppercase;color:var(--color-text-muted);
+      font-weight:500;
+    }
+
+    /* ── MANIFESTO RESPONSIVE ─────────────────────────────────────────────── */
+    @media(max-width:1100px){
+      .manifesto-photo-col{padding-left:36px;}
+      .manifesto-text-col{padding:16vh 36px 16vh 48px;gap:36px;}
+      .manifesto-title{font-size:clamp(40px,5.5vw,78px);}
+    }
+
+    @media(max-width:768px){
+      .manifesto-inner{
+        display:flex;flex-direction:column;
+        min-height:auto;
+      }
+      .manifesto-photo-col{
+        position:relative;top:auto;
+        height:62vw;min-height:260px;max-height:400px;
+        padding:0;width:100%;
+      }
+      .manifesto-photo-wrap{height:100%;max-height:none;}
+      .manifesto-photo-fade-r{display:none;}
+      .manifesto-photo-label{left:24px;bottom:20px;}
+      .manifesto-text-col{padding:40px 24px 72px;gap:28px;}
+      .manifesto-title{
+        font-size:clamp(38px,11vw,60px);
+        letter-spacing:-1px;
+      }
+      .manifesto-body p{font-size:14px;line-height:1.75;}
+      .manifesto-bg-num{display:none;}
+    }
+
+    @media(max-width:390px){
+      .manifesto-text-col{padding:32px 20px 64px;}
+    }
   </style>
 </head>
 <body>
@@ -536,6 +770,64 @@
         <div class="badge-orbit-center"><div class="badge-orbit-dot"></div></div>
       </div>
       <div class="badge-text"><strong>Awwwards Level</strong>Design &amp; Perf.</div>
+    </div>
+
+  </section>
+
+  <!-- ═══ SESSÃO 02 — A FILOSOFIA ══════════════════════════════════════════ -->
+  <section class="manifesto" id="manifesto">
+
+    <div class="manifesto-separator"></div>
+    <div class="manifesto-bg-num">02</div>
+
+    <div class="manifesto-inner">
+
+      <!-- LEFT — sticky photo -->
+      <div class="manifesto-photo-col">
+        <div class="manifesto-photo-wrap" id="manifestoPhotoWrap">
+          <canvas id="manifestoCanvas" class="manifesto-photo-img"></canvas>
+          <div class="manifesto-photo-fade-b"></div>
+          <div class="manifesto-photo-fade-r"></div>
+          <div class="manifesto-photo-fade-t"></div>
+          <div class="manifesto-photo-accent"></div>
+          <div class="manifesto-photo-label">
+            <span class="manifesto-photo-name">Carlos Mendes</span>
+            <span class="manifesto-photo-role">Fundador — Head Coach</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT — scrolling text -->
+      <div class="manifesto-text-col">
+
+        <div class="manifesto-header" id="manifestoHeader">
+          <span class="manifesto-rule" id="manifestoRule"></span>
+          <span class="manifesto-section-label">A Filosofia</span>
+          <span class="manifesto-section-num">02</span>
+        </div>
+
+        <h2 class="manifesto-title" id="manifestoTitle">
+          <span class="manifesto-title-line">A Verdade</span>
+          <span class="manifesto-title-line manifesto-title-outline">Sobre</span>
+          <span class="manifesto-title-line manifesto-title-accent">Excelência.</span>
+        </h2>
+
+        <div class="manifesto-body" id="manifestoBody">
+          <span class="manifesto-quote-mark">"</span>
+          <p>Não existe atalho. Excelência não é um destino — é o resultado de escolhas repetidas no silêncio, quando ninguém está assistindo. Quando o cansaço pede pausa e você continua. Quando o conforto oferece uma saída e você a recusa.</p>
+          <p>Na APEX, não treinamos corpos. Forjamos caráter. Cada sessão é uma negociação com seus próprios limites — e estamos aqui para garantir que você ganhe essa negociação, sempre.</p>
+          <p>Isso não é para todo mundo. Mas pode ser para você.</p>
+        </div>
+
+        <div class="manifesto-signature" id="manifestoSig">
+          <span class="manifesto-sig-line" id="manifestoSigLine"></span>
+          <div class="manifesto-sig-info">
+            <span class="manifesto-sig-name">Carlos Mendes</span>
+            <span class="manifesto-sig-role">Fundador &amp; Head Coach — APEX Training</span>
+          </div>
+        </div>
+
+      </div>
     </div>
 
   </section>
@@ -914,6 +1206,149 @@
 
     hamburger.addEventListener('click', () => menuOpen ? closeMenu() : openMenu());
     mobileLinks.forEach(l => l.addEventListener('click', closeMenu));
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       SESSÃO 02 — A FILOSOFIA
+    ═══════════════════════════════════════════════════════════════════════ */
+
+    /* ── B&W canvas processing for manifesto photo ─────────────────────── */
+    function processManifestoCanvas() {
+      const src = document.getElementById('athleteRaw');
+      const mc  = document.getElementById('manifestoCanvas');
+      if (!mc) return;
+
+      function process() {
+        if (!src.naturalWidth) return;
+        const ctx = mc.getContext('2d');
+        const IW = src.naturalWidth, IH = src.naturalHeight;
+        mc.width = IW; mc.height = IH;
+        ctx.drawImage(src, 0, 0);
+
+        const id = ctx.getImageData(0, 0, IW, IH);
+        const d  = id.data;
+
+        /* Flood-fill white background removal */
+        const visited = new Uint8Array(IW * IH);
+        const queue   = [];
+        const isBg    = i => d[i] > 232 && d[i+1] > 232 && d[i+2] > 232;
+        for (let x = 0; x < IW; x++) { queue.push(x, 0); queue.push(x, IH-1); }
+        for (let y = 1; y < IH-1; y++) { queue.push(0, y); queue.push(IW-1, y); }
+        while (queue.length) {
+          const y = queue.pop(), x = queue.pop();
+          if (x < 0 || x >= IW || y < 0 || y >= IH) continue;
+          const pi = y*IW+x;
+          if (visited[pi]) continue;
+          visited[pi] = 1;
+          const di = pi*4;
+          if (!isBg(di)) continue;
+          d[di+3] = 0;
+          queue.push(x+1,y,x-1,y,x,y+1,x,y-1);
+        }
+
+        /* Grayscale + high contrast S-curve + darken for moody B&W */
+        for (let i = 0; i < d.length; i += 4) {
+          if (d[i+3] < 10) continue;
+          const g  = d[i]*.299 + d[i+1]*.587 + d[i+2]*.114;
+          const sc = Math.max(0, Math.min(255, ((g/255 - .5) * 1.7 + .5) * 255));
+          d[i] = d[i+1] = d[i+2] = sc * .68; /* darken to 68% */
+        }
+
+        ctx.putImageData(id, 0, 0);
+      }
+
+      if (src && src.complete && src.naturalWidth) process();
+      else if (src) src.addEventListener('load', process, { once: true });
+    }
+
+    /* ── Word splitter ────────────────────────────────────────────────────── */
+    function splitManifestoWords() {
+      document.querySelectorAll('.manifesto-body p').forEach(p => {
+        p.innerHTML = p.textContent.trim().split(' ')
+          .map(w => `<span class="m-word">${w}</span>`).join(' ');
+      });
+    }
+
+    /* ── ScrollTrigger animations ─────────────────────────────────────────── */
+    function animateManifesto() {
+      /* Photo reveal — clip-path wipe from bottom */
+      gsap.to('#manifestoPhotoWrap', {
+        clipPath: 'inset(0% 0 0 0)',
+        duration: 1.5,
+        ease: 'power4.out',
+        scrollTrigger: {
+          trigger: '#manifesto',
+          start: 'top 78%',
+          toggleActions: 'play none none reverse',
+        }
+      });
+
+      /* Header slide up */
+      gsap.to('#manifestoHeader', {
+        opacity: 1, y: 0, duration: 0.8, ease: 'power3.out',
+        scrollTrigger: {
+          trigger: '#manifesto',
+          start: 'top 72%',
+          toggleActions: 'play none none reverse',
+        }
+      });
+      gsap.to('#manifestoRule', {
+        width: 40, duration: 0.7, ease: 'power3.out',
+        scrollTrigger: {
+          trigger: '#manifesto',
+          start: 'top 68%',
+          toggleActions: 'play none none reverse',
+        }
+      });
+
+      /* Title */
+      gsap.to('#manifestoTitle', {
+        opacity: 1, y: 0, duration: 1, ease: 'power4.out',
+        scrollTrigger: {
+          trigger: '#manifestoTitle',
+          start: 'top 82%',
+          toggleActions: 'play none none reverse',
+        }
+      });
+
+      /* ── Word-by-word scrub reveal ── */
+      gsap.fromTo('.m-word',
+        { opacity: 0.08 },
+        {
+          opacity: 1,
+          ease: 'none',
+          stagger: { each: 0.018 },
+          scrollTrigger: {
+            trigger: '#manifestoBody',
+            start: 'top 72%',
+            end: 'bottom 22%',
+            scrub: 1.8,
+          }
+        }
+      );
+
+      /* Signature */
+      gsap.to('#manifestoSig', {
+        opacity: 1, y: 0, duration: 0.8, ease: 'power3.out',
+        scrollTrigger: {
+          trigger: '#manifestoSig',
+          start: 'top 88%',
+          toggleActions: 'play none none reverse',
+        }
+      });
+      gsap.to('#manifestoSigLine', {
+        width: 56, duration: 0.8, ease: 'power3.out',
+        scrollTrigger: {
+          trigger: '#manifestoSig',
+          start: 'top 88%',
+          toggleActions: 'play none none reverse',
+        }
+      });
+    }
+
+    /* ── Init ───────────────────────────────────────────────────────────── */
+    processManifestoCanvas();
+    splitManifestoWords();
+    animateManifesto();
   </script>
 </body>
 </html>
