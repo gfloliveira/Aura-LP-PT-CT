@@ -2297,14 +2297,17 @@
       tl.fromTo([mobileCta, mobileFooter], { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, stagger: 0.08, ease: 'power3.out' }, '-=0.2');
     }
 
-    function closeMenu() {
+    function closeMenu(onDone) {
       menuOpen = false;
       hamburger.classList.remove('is-open');
       hamburger.setAttribute('aria-expanded', 'false');
       mobileMenu.setAttribute('aria-hidden', 'true');
       const tl = gsap.timeline({ onComplete: () => mobileMenu.classList.remove('is-open') });
       tl.to([mobileLinks, mobileCta, mobileFooter], { opacity: 0, y: -16, duration: 0.18, stagger: 0.03 });
-      tl.to(mobileMenu, { clipPath: 'inset(0 0 100% 0)', duration: 0.55, ease: 'power4.inOut', onComplete: () => lenis.start() }, '-=0.05');
+      tl.to(mobileMenu, {
+        clipPath: 'inset(0 0 100% 0)', duration: 0.55, ease: 'power4.inOut',
+        onComplete: () => { lenis.start(); if (onDone) onDone(); }
+      }, '-=0.05');
     }
 
     hamburger.addEventListener('click', () => menuOpen ? closeMenu() : openMenu());
@@ -2341,7 +2344,7 @@
 
       /* scroll via Lenis — decelera naturalmente */
       lenis.scrollTo(target, {
-        duration: 1.4,
+        duration: 2.0,
         easing: t => 1 - Math.pow(1 - t, 4),   /* quartic ease-out */
         offset: 0,
         lock: false
@@ -2355,9 +2358,8 @@
         const targetId = el.dataset.navTarget;
 
         if (menuOpen) {
-          /* mobile: fecha menu, depois scrolla */
-          closeMenu();
-          setTimeout(() => navScrollTo(targetId, el), 620);
+          /* mobile: fecha menu, scrolla exatamente quando lenis.start() é chamado */
+          closeMenu(() => navScrollTo(targetId, el));
         } else {
           navScrollTo(targetId, el);
         }
