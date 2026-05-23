@@ -163,12 +163,38 @@ CLAUDE.md      — este arquivo
 
 ---
 
-### 🔲 Sessões Pendentes
+### ✅ Sessão 05 — CTA Final + Footer (CONCLUÍDA)
 
-**Sessão 05 — Footer e CTA Final**
-- Título colossal "COMECE AGORA"
-- Mask reveal: footer desocultado pela seção anterior
-- Links sociais com hover de sublinhado animado
+**Layout:**
+- CTA Final: seção centralizada com título colossal + dois botões de ação
+- Footer: grid 3 colunas (brand | nav | social), bottom bar com copyright + legal
+
+**Componentes construídos:**
+- `.cta-final`: eyebrow com linha animada, título com word-mask reveal (`translateY 110%→0%`)
+  - `#ctaWord1` e `#ctaWord2` — cada palavra em `overflow:hidden` com `<span>` interno animado
+  - `cta-final-title-word--accent` — palavra "AGORA." em laranja
+- Subtítulo e bloco de ações: fade-in em stagger via GSAP timeline + ScrollTrigger
+- `.cta-btn-primary`: botão WhatsApp com SVG + seta, efeito magnético no desktop (`padding:28px`)
+- `.cta-btn-secondary`: borda sutil com hover reveal
+- `.cta-final-glow`: radial gradient laranja central em opacidade mínima
+- `.cta-final-noise`: textura noise SVG base64 para grão sutil
+- Footer 3 colunas:
+  - `.footer-brand`: logo APEX + tagline "Elite Training Club"
+  - `.footer-nav`: 4 links com underline animado `::after` scaleX via `width:0→100%`
+  - `.footer-social`: Instagram, YouTube, TikTok — ícones SVG inline, hover laranja
+- `.footer-bottom`: copyright + links legais (Privacidade / Termos) com underline hover
+- Footer aparece com `opacity:0 → 1 + translateY:24→0` via ScrollTrigger
+- Mobile: grid 1 coluna, nav flex-wrap horizontal, social align-start
+
+---
+
+### 🔲 Sessões Futuras
+
+**Polimento Global**
+- Substituir `athlete.png` por foto real quando disponível
+- Ajustar links de nav para scroll âncoras corretas
+- Configurar link WhatsApp real no botão CTA
+- SEO: meta tags, og:image, favicon
 
 ---
 
@@ -186,4 +212,4 @@ CLAUDE.md      — este arquivo
 - Para trocar a foto do atleta: substituir `src="athlete.png"` em `#athleteRaw` — todo o canvas processing (hero + manifesto) funciona automaticamente
 
 ## Próxima Ação Sugerida
-Iniciar a **Sessão 05 (Footer e CTA Final)** — título colossal "COMECE AGORA", mask reveal, links sociais animados.
+Polimento global — substituir foto do atleta, configurar links reais (WhatsApp, redes sociais), scroll âncoras da nav, meta tags SEO.
