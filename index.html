@@ -905,6 +905,171 @@
       .prog-card-index{right:20px;}
       .prog-card-section-label{left:20px;}
     }
+
+    /* ═══ SESSÃO 04 — RESULTADOS ════════════════════════════════════════════ */
+
+    .results{position:relative;background:var(--color-bg);overflow:clip;}
+
+    .results-separator{
+      width:100%;height:1px;
+      background:linear-gradient(to right,transparent,var(--color-border) 20%,var(--color-border) 80%,transparent);
+    }
+
+    /* Intro */
+    .results-intro{
+      padding:clamp(60px,8vh,100px) 56px clamp(32px,4vh,52px);
+      display:flex;align-items:flex-end;justify-content:space-between;gap:40px;
+    }
+    .results-intro-left{display:flex;flex-direction:column;gap:20px;}
+    .results-eyebrow{display:flex;align-items:center;gap:18px;opacity:0;transform:translateY(12px);}
+    .results-eyebrow-line{display:block;width:0;height:1px;background:var(--color-primary);flex-shrink:0;}
+    .results-eyebrow-label{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--color-primary);font-weight:600;}
+    .results-eyebrow-num{font-family:var(--font-display);font-size:10px;letter-spacing:3px;color:var(--color-text-muted);}
+
+    .results-title{
+      font-family:var(--font-display);
+      font-size:clamp(44px,5.5vw,88px);
+      font-weight:700;line-height:.9;letter-spacing:-2px;text-transform:uppercase;
+      opacity:0;transform:translateY(32px);
+    }
+    .results-title-outline{-webkit-text-stroke:1.5px rgba(242,242,242,.22);color:transparent;display:block;}
+
+    .results-intro-right{max-width:300px;opacity:0;transform:translateY(16px);}
+    .results-desc{font-size:13px;line-height:1.8;color:var(--color-text-secondary);font-weight:300;text-align:right;}
+
+    /* ── Stats strip ──────────────────────────────────────────────────────── */
+    .results-stats{
+      display:grid;grid-template-columns:repeat(4,1fr);
+      border-top:1px solid var(--color-border);
+      border-bottom:1px solid var(--color-border);
+      margin:0 56px clamp(48px,6vh,80px);
+    }
+    .results-stat-item{
+      padding:36px 32px;
+      border-right:1px solid var(--color-border);
+      display:flex;flex-direction:column;gap:8px;
+      opacity:0;transform:translateY(20px);
+    }
+    .results-stat-item:last-child{border-right:none;}
+
+    .results-stat-num{
+      font-family:var(--font-display);
+      font-size:clamp(42px,5vw,76px);
+      font-weight:700;line-height:1;
+      color:var(--color-text);letter-spacing:-2px;
+      display:flex;align-items:baseline;gap:3px;
+    }
+    .results-stat-suffix{color:var(--color-primary);}
+    .results-stat-suffix--word{font-size:.42em;letter-spacing:1px;margin-left:2px;}
+
+    .results-stat-label{font-size:11px;font-weight:500;color:var(--color-text-secondary);letter-spacing:.3px;}
+    .results-stat-sub{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--color-text-muted);font-weight:500;}
+
+    /* ── Marquee ──────────────────────────────────────────────────────────── */
+    .results-marquee{
+      display:flex;flex-direction:column;gap:14px;
+      padding-bottom:clamp(64px,8vh,100px);
+      opacity:0;
+    }
+
+    .marquee-row{overflow:hidden;}
+    .marquee-track{
+      display:flex;gap:14px;
+      width:max-content;
+      will-change:transform;
+    }
+    .marquee-row--left  .marquee-track{animation:mqLeft  52s linear infinite;}
+    .marquee-row--right .marquee-track{animation:mqRight 48s linear infinite;}
+    .marquee-row:hover  .marquee-track{animation-play-state:paused;}
+
+    @keyframes mqLeft  {from{transform:translateX(0)}    to{transform:translateX(-50%)}}
+    @keyframes mqRight {from{transform:translateX(-50%)} to{transform:translateX(0)}}
+
+    /* ── Testimonial card ─────────────────────────────────────────────────── */
+    .test-card{
+      flex-shrink:0;width:360px;
+      padding:26px 30px;
+      border:1px solid var(--color-border);
+      display:flex;flex-direction:column;gap:18px;
+      background:var(--color-bg);
+      transition:border-color .3s ease;
+    }
+    .test-card:hover{border-color:rgba(255,69,0,.3);}
+
+    .test-card-header{display:flex;align-items:center;justify-content:space-between;gap:12px;}
+    .test-author{display:flex;align-items:center;gap:12px;}
+
+    .test-avatar{
+      width:38px;height:38px;border-radius:50%;
+      display:flex;align-items:center;justify-content:center;
+      font-family:var(--font-display);font-size:13px;font-weight:700;
+      flex-shrink:0;
+    }
+    .test-av--a{background:rgba(255,69,0,.14); color:rgba(255,120,50,.9);}
+    .test-av--b{background:rgba(120,140,255,.1);color:rgba(160,180,255,.85);}
+    .test-av--c{background:rgba(255,200,60,.1); color:rgba(255,200,60,.8);}
+    .test-av--d{background:rgba(80,200,120,.1); color:rgba(80,200,120,.8);}
+    .test-av--e{background:rgba(180,100,220,.1);color:rgba(180,140,220,.8);}
+    .test-av--f{background:rgba(60,200,220,.1); color:rgba(60,200,220,.8);}
+    .test-av--g{background:rgba(255,150,60,.1); color:rgba(255,160,70,.85);}
+    .test-av--h{background:rgba(220,200,60,.1); color:rgba(220,200,60,.8);}
+
+    .test-author-info{display:flex;flex-direction:column;gap:3px;}
+    .test-name{font-size:12px;font-weight:600;color:var(--color-text);letter-spacing:.3px;}
+    .test-role{font-size:8.5px;letter-spacing:2px;text-transform:uppercase;color:var(--color-text-muted);font-weight:500;}
+
+    .test-result{
+      font-family:var(--font-display);
+      font-size:22px;font-weight:700;
+      color:var(--color-primary);letter-spacing:-1px;
+      white-space:nowrap;flex-shrink:0;
+    }
+
+    .test-quote{
+      font-size:12.5px;line-height:1.75;
+      color:var(--color-text-secondary);font-weight:300;font-style:italic;
+      flex:1;
+    }
+
+    .test-program{
+      font-size:8px;letter-spacing:2.5px;
+      text-transform:uppercase;color:var(--color-text-muted);font-weight:500;
+      padding-top:14px;border-top:1px solid var(--color-border);
+    }
+
+    /* ── Responsive ─────────────────────────────────────────────────────────── */
+    @media(max-width:1100px){
+      .results-intro{padding-left:36px;padding-right:36px;}
+      .results-stats{margin-left:36px;margin-right:36px;}
+      .results-stat-item{padding:28px 24px;}
+    }
+    @media(max-width:768px){
+      .results-intro{padding:48px 24px 36px;flex-direction:column;gap:20px;align-items:flex-start;}
+      .results-title{font-size:clamp(38px,11vw,56px);letter-spacing:-1px;}
+      .results-desc{text-align:left;}
+      .results-intro-right{max-width:100%;}
+      .results-stats{
+        grid-template-columns:1fr 1fr;
+        margin:0 24px clamp(40px,5vh,64px);
+      }
+      .results-stat-item{
+        padding:22px 18px;
+        border-right:1px solid var(--color-border);
+        border-bottom:1px solid var(--color-border);
+      }
+      .results-stat-item:nth-child(even){border-right:none;}
+      .results-stat-item:nth-child(3),.results-stat-item:nth-child(4){border-bottom:none;}
+      .results-stat-num{font-size:clamp(36px,10vw,56px);}
+      .marquee-row--left  .marquee-track{animation-duration:36s;}
+      .marquee-row--right .marquee-track{animation-duration:32s;}
+      .test-card{width:280px;padding:20px 22px;gap:14px;}
+      .test-quote{font-size:12px;}
+    }
+    @media(max-width:390px){
+      .results-intro{padding-left:20px;padding-right:20px;}
+      .results-stats{margin-left:20px;margin-right:20px;}
+      .test-card{width:256px;}
+    }
   </style>
 </head>
 <body>
@@ -1275,6 +1440,106 @@
           <span class="prog-card-watermark">03</span>
           <div class="prog-card-index"><strong>03</strong> / 03</div>
           <div class="prog-card-section-label"><span class="prog-section-line"></span><span class="prog-section-txt">Programas de Treinamento</span></div>
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- ═══ SESSÃO 04 — RESULTADOS ══════════════════════════════════════════ -->
+  <section class="results" id="results">
+
+    <div class="results-separator"></div>
+
+    <!-- Intro -->
+    <div class="results-intro">
+      <div class="results-intro-left">
+        <div class="results-eyebrow" id="resultsEyebrow">
+          <span class="results-eyebrow-line" id="resultsEyebrowLine"></span>
+          <span class="results-eyebrow-label">Resultados</span>
+          <span class="results-eyebrow-num">04</span>
+        </div>
+        <h2 class="results-title" id="resultsTitle">
+          Números Que<br>
+          <span class="results-title-outline">Não Mentem.</span>
+        </h2>
+      </div>
+      <div class="results-intro-right" id="resultsDesc">
+        <p class="results-desc">Cada depoimento é real. Cada número é auditável. A APEX não vende promessas — entrega transformação documentada.</p>
+      </div>
+    </div>
+
+    <!-- Stats strip -->
+    <div class="results-stats">
+      <div class="results-stat-item" id="stat01">
+        <span class="results-stat-num"><span class="stat-count" data-target="4200">0</span><span class="results-stat-suffix">+</span></span>
+        <span class="results-stat-label">Alunos transformados</span>
+        <span class="results-stat-sub">desde 2019</span>
+      </div>
+      <div class="results-stat-item" id="stat02">
+        <span class="results-stat-num"><span class="stat-count" data-target="98">0</span><span class="results-stat-suffix">%</span></span>
+        <span class="results-stat-label">Taxa de retenção anual</span>
+        <span class="results-stat-sub">média dos últimos 3 anos</span>
+      </div>
+      <div class="results-stat-item" id="stat03">
+        <span class="results-stat-num"><span class="stat-count" data-target="340">0</span><span class="results-stat-suffix">+</span></span>
+        <span class="results-stat-label">Transformações documentadas</span>
+        <span class="results-stat-sub">com antes e depois verificados</span>
+      </div>
+      <div class="results-stat-item" id="stat04">
+        <span class="results-stat-num"><span class="stat-count" data-target="7">0</span><span class="results-stat-suffix results-stat-suffix--word">anos</span></span>
+        <span class="results-stat-label">Metodologia refinada</span>
+        <span class="results-stat-sub">ciência aplicada ao treino</span>
+      </div>
+    </div>
+
+    <!-- Marquee duplo -->
+    <div class="results-marquee" id="resultsMarquee">
+
+      <!-- Row 1 → esquerda -->
+      <div class="marquee-row marquee-row--left">
+        <div class="marquee-track">
+          <div class="test-card"><div class="test-card-header"><div class="test-author"><div class="test-avatar test-av--a">RM</div><div class="test-author-info"><span class="test-name">Rafael M.</span><span class="test-role">Empresário</span></div></div><span class="test-result">-22kg</span></div><p class="test-quote">"Nunca pensei que conseguiria chegar aqui. A APEX transformou completamente minha relação com meu próprio corpo."</p><div class="test-program">Programa Elite — 16 semanas</div></div>
+          <div class="test-card"><div class="test-card-header"><div class="test-author"><div class="test-avatar test-av--b">AS</div><div class="test-author-info"><span class="test-name">Amanda S.</span><span class="test-role">Médica</span></div></div><span class="test-result">+9kg massa</span></div><p class="test-quote">"Metodologia baseada em evidência. É exatamente o que separa a APEX de qualquer abordagem que já conheci."</p><div class="test-program">Programa Hipertrofia — 12 semanas</div></div>
+          <div class="test-card"><div class="test-card-header"><div class="test-author"><div class="test-avatar test-av--c">CT</div><div class="test-author-info"><span class="test-name">Carlos T.</span><span class="test-role">Engenheiro</span></div></div><span class="test-result">-18kg</span></div><p class="test-quote">"Voltei ao esporte após uma cirurgia. Carlos Mendes entende o corpo humano de uma forma que poucos profissionais entendem."</p><div class="test-program">Programa Resistência — 8 semanas</div></div>
+          <div class="test-card"><div class="test-card-header"><div class="test-author"><div class="test-avatar test-av--d">BR</div><div class="test-author-info"><span class="test-name">Bianca R.</span><span class="test-role">Advogada</span></div></div><span class="test-result">+11kg massa</span></div><p class="test-quote">"Hipertrofia com inteligência e planejamento real. Cada semana vi evolução documentada, sem achismos."</p><div class="test-program">Programa Hipertrofia — 12 semanas</div></div>
+          <div class="test-card"><div class="test-card-header"><div class="test-author"><div class="test-avatar test-av--e">PA</div><div class="test-author-info"><span class="test-name">Pedro A.</span><span class="test-role">Atleta amador</span></div></div><span class="test-result">PR pessoal</span></div><p class="test-quote">"Achava que tinha passado o auge aos 38. Estava completamente errado. A APEX mostrou que o limite estava só na minha cabeça."</p><div class="test-program">Programa Elite — 16 semanas</div></div>
+          <div class="test-card"><div class="test-card-header"><div class="test-author"><div class="test-avatar test-av--f">FL</div><div class="test-author-info"><span class="test-name">Fernanda L.</span><span class="test-role">Executiva</span></div></div><span class="test-result">-19kg</span></div><p class="test-quote">"Perder é a parte fácil. Manter é onde outros programas falham. A metodologia da APEX é construída para a vida."</p><div class="test-program">Programa Resistência — 8 semanas</div></div>
+          <div class="test-card"><div class="test-card-header"><div class="test-author"><div class="test-avatar test-av--g">TB</div><div class="test-author-info"><span class="test-name">Thiago B.</span><span class="test-role">Policial</span></div></div><span class="test-result">10km → maratona</span></div><p class="test-quote">"De sedentário a finalizador de maratona em 8 meses. Cada treino tinha um propósito exato. Sem enrolação."</p><div class="test-program">Programa Resistência — 8 semanas</div></div>
+          <div class="test-card"><div class="test-card-header"><div class="test-author"><div class="test-avatar test-av--h">JC</div><div class="test-author-info"><span class="test-name">Juliana C.</span><span class="test-role">Designer</span></div></div><span class="test-result">+12kg massa</span></div><p class="test-quote">"Resultado que eu achava biologicamente impossível para mim. A nutrição integrada no programa mudou absolutamente tudo."</p><div class="test-program">Programa Hipertrofia — 12 semanas</div></div>
+          <!-- Duplicado para loop contínuo -->
+          <div class="test-card"><div class="test-card-header"><div class="test-author"><div class="test-avatar test-av--a">RM</div><div class="test-author-info"><span class="test-name">Rafael M.</span><span class="test-role">Empresário</span></div></div><span class="test-result">-22kg</span></div><p class="test-quote">"Nunca pensei que conseguiria chegar aqui. A APEX transformou completamente minha relação com meu próprio corpo."</p><div class="test-program">Programa Elite — 16 semanas</div></div>
+          <div class="test-card"><div class="test-card-header"><div class="test-author"><div class="test-avatar test-av--b">AS</div><div class="test-author-info"><span class="test-name">Amanda S.</span><span class="test-role">Médica</span></div></div><span class="test-result">+9kg massa</span></div><p class="test-quote">"Metodologia baseada em evidência. É exatamente o que separa a APEX de qualquer abordagem que já conheci."</p><div class="test-program">Programa Hipertrofia — 12 semanas</div></div>
+          <div class="test-card"><div class="test-card-header"><div class="test-author"><div class="test-avatar test-av--c">CT</div><div class="test-author-info"><span class="test-name">Carlos T.</span><span class="test-role">Engenheiro</span></div></div><span class="test-result">-18kg</span></div><p class="test-quote">"Voltei ao esporte após uma cirurgia. Carlos Mendes entende o corpo humano de uma forma que poucos profissionais entendem."</p><div class="test-program">Programa Resistência — 8 semanas</div></div>
+          <div class="test-card"><div class="test-card-header"><div class="test-author"><div class="test-avatar test-av--d">BR</div><div class="test-author-info"><span class="test-name">Bianca R.</span><span class="test-role">Advogada</span></div></div><span class="test-result">+11kg massa</span></div><p class="test-quote">"Hipertrofia com inteligência e planejamento real. Cada semana vi evolução documentada, sem achismos."</p><div class="test-program">Programa Hipertrofia — 12 semanas</div></div>
+          <div class="test-card"><div class="test-card-header"><div class="test-author"><div class="test-avatar test-av--e">PA</div><div class="test-author-info"><span class="test-name">Pedro A.</span><span class="test-role">Atleta amador</span></div></div><span class="test-result">PR pessoal</span></div><p class="test-quote">"Achava que tinha passado o auge aos 38. Estava completamente errado. A APEX mostrou que o limite estava só na minha cabeça."</p><div class="test-program">Programa Elite — 16 semanas</div></div>
+          <div class="test-card"><div class="test-card-header"><div class="test-author"><div class="test-avatar test-av--f">FL</div><div class="test-author-info"><span class="test-name">Fernanda L.</span><span class="test-role">Executiva</span></div></div><span class="test-result">-19kg</span></div><p class="test-quote">"Perder é a parte fácil. Manter é onde outros programas falham. A metodologia da APEX é construída para a vida."</p><div class="test-program">Programa Resistência — 8 semanas</div></div>
+          <div class="test-card"><div class="test-card-header"><div class="test-author"><div class="test-avatar test-av--g">TB</div><div class="test-author-info"><span class="test-name">Thiago B.</span><span class="test-role">Policial</span></div></div><span class="test-result">10km → maratona</span></div><p class="test-quote">"De sedentário a finalizador de maratona em 8 meses. Cada treino tinha um propósito exato. Sem enrolação."</p><div class="test-program">Programa Resistência — 8 semanas</div></div>
+          <div class="test-card"><div class="test-card-header"><div class="test-author"><div class="test-avatar test-av--h">JC</div><div class="test-author-info"><span class="test-name">Juliana C.</span><span class="test-role">Designer</span></div></div><span class="test-result">+12kg massa</span></div><p class="test-quote">"Resultado que eu achava biologicamente impossível para mim. A nutrição integrada no programa mudou absolutamente tudo."</p><div class="test-program">Programa Hipertrofia — 12 semanas</div></div>
+        </div>
+      </div>
+
+      <!-- Row 2 ← direita (ordem alternada) -->
+      <div class="marquee-row marquee-row--right">
+        <div class="marquee-track">
+          <div class="test-card"><div class="test-card-header"><div class="test-author"><div class="test-avatar test-av--e">PA</div><div class="test-author-info"><span class="test-name">Pedro A.</span><span class="test-role">Atleta amador</span></div></div><span class="test-result">PR pessoal</span></div><p class="test-quote">"Achava que tinha passado o auge aos 38. Estava completamente errado. A APEX mostrou que o limite estava só na minha cabeça."</p><div class="test-program">Programa Elite — 16 semanas</div></div>
+          <div class="test-card"><div class="test-card-header"><div class="test-author"><div class="test-avatar test-av--g">TB</div><div class="test-author-info"><span class="test-name">Thiago B.</span><span class="test-role">Policial</span></div></div><span class="test-result">10km → maratona</span></div><p class="test-quote">"De sedentário a finalizador de maratona em 8 meses. Cada treino tinha um propósito exato. Sem enrolação."</p><div class="test-program">Programa Resistência — 8 semanas</div></div>
+          <div class="test-card"><div class="test-card-header"><div class="test-author"><div class="test-avatar test-av--a">RM</div><div class="test-author-info"><span class="test-name">Rafael M.</span><span class="test-role">Empresário</span></div></div><span class="test-result">-22kg</span></div><p class="test-quote">"Nunca pensei que conseguiria chegar aqui. A APEX transformou completamente minha relação com meu próprio corpo."</p><div class="test-program">Programa Elite — 16 semanas</div></div>
+          <div class="test-card"><div class="test-card-header"><div class="test-author"><div class="test-avatar test-av--f">FL</div><div class="test-author-info"><span class="test-name">Fernanda L.</span><span class="test-role">Executiva</span></div></div><span class="test-result">-19kg</span></div><p class="test-quote">"Perder é a parte fácil. Manter é onde outros programas falham. A metodologia da APEX é construída para a vida."</p><div class="test-program">Programa Resistência — 8 semanas</div></div>
+          <div class="test-card"><div class="test-card-header"><div class="test-author"><div class="test-avatar test-av--c">CT</div><div class="test-author-info"><span class="test-name">Carlos T.</span><span class="test-role">Engenheiro</span></div></div><span class="test-result">-18kg</span></div><p class="test-quote">"Voltei ao esporte após uma cirurgia. Carlos Mendes entende o corpo humano de uma forma que poucos profissionais entendem."</p><div class="test-program">Programa Resistência — 8 semanas</div></div>
+          <div class="test-card"><div class="test-card-header"><div class="test-author"><div class="test-avatar test-av--h">JC</div><div class="test-author-info"><span class="test-name">Juliana C.</span><span class="test-role">Designer</span></div></div><span class="test-result">+12kg massa</span></div><p class="test-quote">"Resultado que eu achava biologicamente impossível para mim. A nutrição integrada no programa mudou absolutamente tudo."</p><div class="test-program">Programa Hipertrofia — 12 semanas</div></div>
+          <div class="test-card"><div class="test-card-header"><div class="test-author"><div class="test-avatar test-av--b">AS</div><div class="test-author-info"><span class="test-name">Amanda S.</span><span class="test-role">Médica</span></div></div><span class="test-result">+9kg massa</span></div><p class="test-quote">"Metodologia baseada em evidência. É exatamente o que separa a APEX de qualquer abordagem que já conheci."</p><div class="test-program">Programa Hipertrofia — 12 semanas</div></div>
+          <div class="test-card"><div class="test-card-header"><div class="test-author"><div class="test-avatar test-av--d">BR</div><div class="test-author-info"><span class="test-name">Bianca R.</span><span class="test-role">Advogada</span></div></div><span class="test-result">+11kg massa</span></div><p class="test-quote">"Hipertrofia com inteligência e planejamento real. Cada semana vi evolução documentada, sem achismos."</p><div class="test-program">Programa Hipertrofia — 12 semanas</div></div>
+          <!-- Duplicado -->
+          <div class="test-card"><div class="test-card-header"><div class="test-author"><div class="test-avatar test-av--e">PA</div><div class="test-author-info"><span class="test-name">Pedro A.</span><span class="test-role">Atleta amador</span></div></div><span class="test-result">PR pessoal</span></div><p class="test-quote">"Achava que tinha passado o auge aos 38. Estava completamente errado. A APEX mostrou que o limite estava só na minha cabeça."</p><div class="test-program">Programa Elite — 16 semanas</div></div>
+          <div class="test-card"><div class="test-card-header"><div class="test-author"><div class="test-avatar test-av--g">TB</div><div class="test-author-info"><span class="test-name">Thiago B.</span><span class="test-role">Policial</span></div></div><span class="test-result">10km → maratona</span></div><p class="test-quote">"De sedentário a finalizador de maratona em 8 meses. Cada treino tinha um propósito exato. Sem enrolação."</p><div class="test-program">Programa Resistência — 8 semanas</div></div>
+          <div class="test-card"><div class="test-card-header"><div class="test-author"><div class="test-avatar test-av--a">RM</div><div class="test-author-info"><span class="test-name">Rafael M.</span><span class="test-role">Empresário</span></div></div><span class="test-result">-22kg</span></div><p class="test-quote">"Nunca pensei que conseguiria chegar aqui. A APEX transformou completamente minha relação com meu próprio corpo."</p><div class="test-program">Programa Elite — 16 semanas</div></div>
+          <div class="test-card"><div class="test-card-header"><div class="test-author"><div class="test-avatar test-av--f">FL</div><div class="test-author-info"><span class="test-name">Fernanda L.</span><span class="test-role">Executiva</span></div></div><span class="test-result">-19kg</span></div><p class="test-quote">"Perder é a parte fácil. Manter é onde outros programas falham. A metodologia da APEX é construída para a vida."</p><div class="test-program">Programa Resistência — 8 semanas</div></div>
+          <div class="test-card"><div class="test-card-header"><div class="test-author"><div class="test-avatar test-av--c">CT</div><div class="test-author-info"><span class="test-name">Carlos T.</span><span class="test-role">Engenheiro</span></div></div><span class="test-result">-18kg</span></div><p class="test-quote">"Voltei ao esporte após uma cirurgia. Carlos Mendes entende o corpo humano de uma forma que poucos profissionais entendem."</p><div class="test-program">Programa Resistência — 8 semanas</div></div>
+          <div class="test-card"><div class="test-card-header"><div class="test-author"><div class="test-avatar test-av--h">JC</div><div class="test-author-info"><span class="test-name">Juliana C.</span><span class="test-role">Designer</span></div></div><span class="test-result">+12kg massa</span></div><p class="test-quote">"Resultado que eu achava biologicamente impossível para mim. A nutrição integrada no programa mudou absolutamente tudo."</p><div class="test-program">Programa Hipertrofia — 12 semanas</div></div>
+          <div class="test-card"><div class="test-card-header"><div class="test-author"><div class="test-avatar test-av--b">AS</div><div class="test-author-info"><span class="test-name">Amanda S.</span><span class="test-role">Médica</span></div></div><span class="test-result">+9kg massa</span></div><p class="test-quote">"Metodologia baseada em evidência. É exatamente o que separa a APEX de qualquer abordagem que já conheci."</p><div class="test-program">Programa Hipertrofia — 12 semanas</div></div>
+          <div class="test-card"><div class="test-card-header"><div class="test-author"><div class="test-avatar test-av--d">BR</div><div class="test-author-info"><span class="test-name">Bianca R.</span><span class="test-role">Advogada</span></div></div><span class="test-result">+11kg massa</span></div><p class="test-quote">"Hipertrofia com inteligência e planejamento real. Cada semana vi evolução documentada, sem achismos."</p><div class="test-program">Programa Hipertrofia — 12 semanas</div></div>
         </div>
       </div>
 
@@ -1899,6 +2164,57 @@
       });
     }
     initPrograms();
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       SESSÃO 04 — RESULTADOS
+    ═══════════════════════════════════════════════════════════════════════ */
+    function initResults() {
+      gsap.to('#resultsEyebrow', {
+        opacity:1, y:0, duration:.8, ease:'power3.out',
+        scrollTrigger:{ trigger:'.results-intro', start:'top 78%', toggleActions:'play none none reverse' }
+      });
+      gsap.to('#resultsEyebrowLine', {
+        width:40, duration:.6, ease:'power3.out',
+        scrollTrigger:{ trigger:'.results-intro', start:'top 75%', toggleActions:'play none none reverse' }
+      });
+      gsap.to('#resultsTitle', {
+        opacity:1, y:0, duration:1, ease:'power4.out',
+        scrollTrigger:{ trigger:'.results-intro', start:'top 72%', toggleActions:'play none none reverse' }
+      });
+      gsap.to('#resultsDesc', {
+        opacity:1, y:0, duration:.8, ease:'power3.out',
+        scrollTrigger:{ trigger:'.results-intro', start:'top 70%', toggleActions:'play none none reverse' }
+      });
+
+      gsap.to('.results-stat-item', {
+        opacity:1, y:0, duration:.8, ease:'power3.out', stagger:.1,
+        scrollTrigger:{ trigger:'.results-stats', start:'top 75%', toggleActions:'play none none reverse' }
+      });
+
+      document.querySelectorAll('.stat-count').forEach(el => {
+        const target = parseInt(el.dataset.target);
+        const obj = { val: 0 };
+        ScrollTrigger.create({
+          trigger: el, start:'top 80%', once:true,
+          onEnter() {
+            gsap.to(obj, {
+              val: target, duration:2, ease:'power2.out',
+              onUpdate() {
+                el.textContent = target >= 1000
+                  ? Math.round(obj.val).toLocaleString('pt-BR')
+                  : Math.round(obj.val).toString();
+              }
+            });
+          }
+        });
+      });
+
+      gsap.to('#resultsMarquee', {
+        opacity:1, y:0, duration:1, ease:'power3.out',
+        scrollTrigger:{ trigger:'#resultsMarquee', start:'top 85%', toggleActions:'play none none reverse' }
+      });
+    }
+    initResults();
   </script>
 </body>
 </html>
