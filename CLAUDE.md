@@ -123,16 +123,16 @@ CLAUDE.md      — este arquivo
 - `.programs-track` move `x: 0 → -totalMove` com `scrub: 1.2`
   - `totalMove` calculado dinamicamente: `(cards.length - 1) * (cardW + gap)`
   - `end: '+=' + (totalMove + innerHeight * 0.8)`
-- 3 cartões: Hipertrofia / Resistência / Elite
-  - Card ativo: `scale(1)`, `opacity: 1`, glow border laranja (`.prog-card::after`)
-  - Cards inativos: `scale(0.86)`, `opacity: 0.35`
-  - `setActive(idx)` via GSAP tween com `overwrite: true`
-- HUD: label + counter `01 / 03` que atualiza em tempo real
-- Progress bar na base da seção (`.programs-progress-fill`)
-- Card Elite: badge "Exclusivo" com dot pulsante
-- Grid de stats 2×2 por card (sessões/sem, duração, ciclo, ganho médio)
-- Barra de intensidade com 5 pips (3/5, 4/5, 5/5)
-- Padding dinâmico no track para centralizar cards: `calc(50vw - cardWidth/2)`
+- **Layout: Full Viewport Stacked** — cada card é `position:sticky; top:0; height:100vh`
+- 3 cards empilhados com z-index crescente (01→1, 02→2, 03→3)
+- Card seguinte desliza por cima do anterior conforme scroll (efeito cover natural)
+- `.prog-card-inner` recebe `scale(0.96) + brightness(0.65)` via GSAP scrub enquanto é coberto
+- Conteúdo de cada card anima na entrada: `translateX → 0` (nível), `translateY → 0` (título), stagger nos stats/intensidade/CTA
+- Card Elite: badge "Exclusivo" com dot pulsante, gradiente mais intenso
+- Contador `01 / 03` fixo no canto superior direito de cada card
+- Número watermark gigante no canto inferior direito
+- Background: gradientes placeholder (substituir por imagens Gemini/Imagen quando prontas)
+- Mobile: `position:relative`, cards empilhados verticalmente, animações desativadas
 
 ---
 

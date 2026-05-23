@@ -626,7 +626,7 @@
       .manifesto-text-col{padding:32px 20px 64px;}
     }
 
-    /* ═══ SESSÃO 03 — PROGRAMAS ═══════════════════════════════════════════════ */
+    /* ═══ SESSÃO 03 — PROGRAMAS (STACKED) ════════════════════════════════════ */
 
     .programs{position:relative;background:var(--color-bg);}
 
@@ -659,93 +659,110 @@
     .programs-intro-right{max-width:320px;opacity:0;transform:translateY(16px);}
     .programs-desc{font-size:13px;line-height:1.8;color:var(--color-text-secondary);font-weight:300;text-align:right;}
 
-    /* ── Pinned viewport ──────────────────────────────────────────────────── */
-    .programs-pin-wrap{
-      height:100vh;
-      overflow:hidden;
-      position:relative;
-      display:flex;
-      flex-direction:column;
-    }
+    /* ── Stack container ──────────────────────────────────────────────────── */
+    .programs-stack{position:relative;}
 
-    .programs-hud{
-      position:absolute;top:0;left:0;right:0;
-      height:56px;
-      display:flex;align-items:center;justify-content:space-between;
-      padding:0 56px;
-      z-index:10;pointer-events:none;
-    }
-    .programs-hud-label{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--color-text-muted);}
-    .prog-counter{font-family:var(--font-display);font-size:13px;font-weight:600;letter-spacing:3px;color:var(--color-text-secondary);}
-    .prog-counter strong{color:var(--color-primary);}
-
-    .programs-track-outer{
-      flex:1;
-      display:flex;
-      align-items:center;
-      padding-top:56px;
-      padding-bottom:20px;
-    }
-
-    .programs-track{
-      display:flex;
-      align-items:center;
-      gap:40px;
-      will-change:transform;
-      padding:0 calc(50vw - 270px);
-    }
-
-    /* ── Card ─────────────────────────────────────────────────────────────── */
+    /* Each card: full-viewport sticky layer */
     .prog-card{
-      flex:0 0 540px;
-      height:min(72vh,620px);
-      position:relative;
+      position:sticky;
+      top:0;
+      height:100vh;height:100dvh;
       overflow:hidden;
-      border:1px solid var(--color-border);
-      padding:48px 44px;
       display:flex;
-      flex-direction:column;
-      will-change:transform,opacity;
+      align-items:center;
+    }
+    .prog-card--01{z-index:1;}
+    .prog-card--02{z-index:2;}
+    .prog-card--03{z-index:3;}
+
+    /* Inner wrapper — GSAP scale-back acts here, not on the sticky element */
+    .prog-card-inner{
+      position:absolute;inset:0;
+      display:flex;align-items:center;
+      transform-origin:center top;
+      will-change:transform,filter;
     }
 
-    /* BG watermark number */
-    .prog-card-bg-num{
-      position:absolute;right:-10px;top:50%;
-      transform:translateY(-50%);
+    /* Background (gradient placeholder — replaced by image later) */
+    .prog-card-bg{
+      position:absolute;inset:0;z-index:0;
+    }
+    .prog-card--01 .prog-card-bg{
+      background:
+        radial-gradient(ellipse 55% 70% at 78% 50%,rgba(255,69,0,.13) 0%,transparent 58%),
+        radial-gradient(ellipse 28% 38% at 88% 82%,rgba(255,69,0,.07) 0%,transparent 50%),
+        linear-gradient(135deg,#0A0A0A 0%,#111111 40%,#0E0B0A 100%);
+    }
+    .prog-card--02 .prog-card-bg{
+      background:
+        radial-gradient(ellipse 50% 65% at 74% 46%,rgba(255,69,0,.11) 0%,transparent 58%),
+        radial-gradient(ellipse 22% 32% at 85% 16%,rgba(255,100,0,.06) 0%,transparent 45%),
+        linear-gradient(135deg,#0A0A0A 0%,#0C0C0E 40%,#0A0A0D 100%);
+    }
+    .prog-card--03 .prog-card-bg{
+      background:
+        radial-gradient(ellipse 65% 80% at 76% 50%,rgba(255,69,0,.20) 0%,transparent 55%),
+        radial-gradient(ellipse 25% 30% at 92% 18%,rgba(255,110,0,.10) 0%,transparent 40%),
+        radial-gradient(ellipse 30% 40% at 88% 88%,rgba(200,50,0,.06) 0%,transparent 45%),
+        linear-gradient(135deg,#040404 0%,#0A0808 40%,#080505 100%);
+    }
+
+    /* Gradient overlay: left dark → transparent right (text readability) */
+    .prog-card-overlay{
+      position:absolute;inset:0;z-index:1;
+      background:linear-gradient(
+        to right,
+        rgba(10,10,10,1) 0%,
+        rgba(10,10,10,.93) 26%,
+        rgba(10,10,10,.62) 46%,
+        rgba(10,10,10,.20) 65%,
+        transparent 82%
+      );
+    }
+
+    /* Content — left-aligned */
+    .prog-card-content{
+      position:relative;z-index:2;
+      padding:0 56px;
+      display:flex;flex-direction:column;gap:28px;
+      max-width:600px;
+      width:100%;
+    }
+
+    /* Large watermark number (right side) */
+    .prog-card-watermark{
+      position:absolute;right:48px;bottom:32px;
       font-family:var(--font-display);
-      font-size:230px;font-weight:700;line-height:1;
-      color:rgba(242,242,242,.028);
-      pointer-events:none;user-select:none;z-index:0;
+      font-size:clamp(120px,18vw,230px);
+      font-weight:700;line-height:1;
+      color:rgba(242,242,242,.03);
+      z-index:2;pointer-events:none;user-select:none;
     }
 
-    /* Active glow border overlay */
-    .prog-card::after{
-      content:'';position:absolute;inset:0;
-      border:1px solid var(--color-primary);
-      opacity:0;pointer-events:none;
-      box-shadow:0 0 70px rgba(255,69,0,.14),inset 0 0 50px rgba(255,69,0,.04);
-      transition:opacity .5s ease;
+    /* Top-right counter */
+    .prog-card-index{
+      position:absolute;top:var(--nav-h);right:56px;
+      z-index:3;
+      font-family:var(--font-display);font-size:11px;letter-spacing:3px;
+      color:var(--color-text-muted);
     }
-    .prog-card.is-active::after{opacity:1;}
+    .prog-card-index strong{color:var(--color-primary);}
 
-    /* Ambient glow at card bottom */
-    .prog-card::before{
-      content:'';position:absolute;
-      bottom:0;left:10%;width:80%;height:45%;
-      background:radial-gradient(ellipse at 50% 100%,rgba(255,69,0,.1) 0%,transparent 70%);
-      filter:blur(18px);
-      opacity:0;pointer-events:none;z-index:0;
-      transition:opacity .5s ease;
+    /* Bottom-left section label */
+    .prog-card-section-label{
+      position:absolute;bottom:36px;left:56px;
+      z-index:3;display:flex;align-items:center;gap:14px;
     }
-    .prog-card.is-active::before{opacity:1;}
+    .prog-section-line{display:block;width:28px;height:1px;background:var(--color-border);}
+    .prog-section-txt{font-size:8.5px;letter-spacing:3px;text-transform:uppercase;color:var(--color-text-muted);font-weight:500;}
 
-    .prog-card-top,.prog-card-body,.prog-card-bottom{position:relative;z-index:1;}
-
-    .prog-card-top{display:flex;flex-direction:column;gap:14px;margin-bottom:20px;}
-
-    .prog-level-row{display:flex;align-items:center;gap:14px;}
-    .prog-level-tag{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--color-primary);font-weight:600;white-space:nowrap;}
-    .prog-level-sep{flex:1;height:1px;background:var(--color-border);}
+    /* ── Content elements — initial hidden state ──────────────────────────── */
+    .prog-level-row{
+      display:flex;align-items:center;gap:16px;
+      opacity:0;transform:translateX(-24px);
+    }
+    .prog-level-tag{font-size:9px;letter-spacing:3.5px;text-transform:uppercase;color:var(--color-primary);font-weight:600;}
+    .prog-level-line{display:block;width:0;height:1px;background:var(--color-primary);flex-shrink:0;}
 
     .prog-exclusive{
       display:inline-flex;align-items:center;gap:8px;
@@ -754,6 +771,7 @@
       font-size:8px;letter-spacing:2.5px;text-transform:uppercase;
       color:var(--color-primary);font-weight:600;
       align-self:flex-start;
+      opacity:0;transform:translateX(-24px);
     }
     .prog-exclusive-dot{
       width:4px;height:4px;background:var(--color-primary);border-radius:50%;
@@ -763,74 +781,74 @@
 
     .prog-card-name{
       font-family:var(--font-display);
-      font-size:clamp(38px,3.8vw,60px);
-      font-weight:700;line-height:.88;
-      letter-spacing:-2px;text-transform:uppercase;
+      font-size:clamp(64px,8.5vw,130px);
+      font-weight:700;line-height:.85;
+      letter-spacing:-3px;text-transform:uppercase;
       color:var(--color-text);
+      opacity:0;transform:translateY(40px);
     }
 
-    /* Stats grid */
-    .prog-card-body{flex:1;display:flex;flex-direction:column;justify-content:center;gap:18px;}
-
-    .prog-stats{
-      display:grid;grid-template-columns:1fr 1fr;
-      gap:1px;background:var(--color-border);
+    /* Stats in a horizontal row */
+    .prog-stats-row{
+      display:flex;
       border:1px solid var(--color-border);
+      opacity:0;transform:translateY(20px);
     }
     .prog-stat{
-      background:var(--color-bg);
+      flex:1;
       padding:16px 20px;
-      display:flex;flex-direction:column;gap:7px;
+      border-right:1px solid var(--color-border);
+      display:flex;flex-direction:column;gap:6px;
     }
-    .prog-stat-val{font-family:var(--font-display);font-size:32px;font-weight:700;line-height:1;color:var(--color-text);}
-    .prog-stat-val sup{font-size:.52em;color:var(--color-primary);vertical-align:super;}
+    .prog-stat:last-child{border-right:none;}
+    .prog-stat-val{font-family:var(--font-display);font-size:30px;font-weight:700;line-height:1;color:var(--color-text);}
+    .prog-stat-val sup{font-size:.5em;color:var(--color-primary);vertical-align:super;}
     .prog-stat-lbl{font-size:8px;letter-spacing:2.5px;text-transform:uppercase;color:var(--color-text-muted);font-weight:500;}
 
     /* Intensity */
-    .prog-intensity{display:flex;flex-direction:column;gap:9px;}
+    .prog-intensity{display:flex;flex-direction:column;gap:10px;opacity:0;}
     .prog-intensity-lbl{font-size:8px;letter-spacing:2.5px;text-transform:uppercase;color:var(--color-text-muted);font-weight:500;}
     .prog-intensity-track{display:flex;gap:5px;}
-    .prog-pip{flex:1;height:3px;background:var(--color-border);}
+    .prog-pip{width:40px;height:3px;background:var(--color-border);}
     .prog-pip.filled{background:var(--color-primary);box-shadow:0 0 8px rgba(255,69,0,.5);}
 
-    /* Card bottom */
-    .prog-card-bottom{
-      display:flex;align-items:center;justify-content:space-between;
-      padding-top:18px;border-top:1px solid var(--color-border);
-      margin-top:16px;
+    /* CTA row */
+    .prog-cta-row{
+      display:flex;align-items:center;gap:32px;
+      opacity:0;transform:translateY(16px);
     }
     .prog-cta{
-      display:flex;align-items:center;gap:10px;
-      font-family:var(--font-body);font-size:9px;font-weight:600;
-      letter-spacing:2.5px;text-transform:uppercase;
+      display:inline-flex;align-items:center;gap:14px;
+      font-family:var(--font-body);font-size:10px;font-weight:700;
+      letter-spacing:3px;text-transform:uppercase;
       color:var(--color-primary);
-      background:none;border:none;padding:0;cursor:pointer;
-      transition:gap .3s var(--ease-expo);
+      background:none;border:1px solid var(--color-primary);
+      padding:15px 28px;cursor:pointer;
+      position:relative;overflow:hidden;
+      transition:color .4s var(--ease-expo);
     }
-    .prog-cta:hover{gap:16px;}
+    .prog-cta::before{
+      content:'';position:absolute;inset:0;
+      background:var(--color-primary);
+      transform:scaleX(0);transform-origin:left;
+      transition:transform .4s var(--ease-expo);
+    }
+    .prog-cta:hover{color:var(--color-bg);}
+    .prog-cta:hover::before{transform:scaleX(1);}
+    .prog-cta-txt{position:relative;z-index:1;}
+    .prog-cta-arr{position:relative;z-index:1;display:flex;align-items:center;gap:6px;}
     .prog-cta-line{display:block;width:16px;height:1px;background:currentColor;}
     .prog-cta-head{display:block;width:5px;height:5px;border-top:1px solid currentColor;border-right:1px solid currentColor;transform:rotate(45deg);}
-    .prog-duration{font-size:8.5px;letter-spacing:2px;text-transform:uppercase;color:var(--color-text-muted);font-weight:500;}
-
-    /* Progress bar */
-    .programs-progress{
-      position:absolute;bottom:0;left:0;right:0;
-      height:2px;background:var(--color-border);z-index:10;
-    }
-    .programs-progress-fill{
-      height:100%;width:0%;
-      background:linear-gradient(to right,var(--color-primary),rgba(255,69,0,.5));
-      will-change:width;
-    }
+    .prog-duration-tag{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--color-text-muted);font-weight:500;}
 
     /* ── Responsive ─────────────────────────────────────────────────────────── */
     @media(max-width:1100px){
       .programs-intro{padding-left:36px;padding-right:36px;}
-      .programs-hud{padding:0 36px;}
-      .programs-track{padding:0 calc(50vw - 230px);gap:32px;}
-      .prog-card{flex:0 0 460px;padding:40px 34px;}
-      .prog-card-bg-num{font-size:190px;}
-      .prog-card-name{font-size:clamp(36px,3.4vw,54px);}
+      .prog-card-content{padding:0 36px;max-width:520px;}
+      .prog-card-index{right:36px;}
+      .prog-card-watermark{right:36px;}
+      .prog-card-section-label{left:36px;}
+      .prog-card-name{font-size:clamp(56px,7.5vw,108px);}
     }
 
     @media(max-width:768px){
@@ -839,38 +857,50 @@
       .programs-desc{text-align:left;}
       .programs-intro-right{max-width:100%;}
 
-      .programs-pin-wrap{height:auto;overflow:visible;}
-      .programs-hud{display:none;}
-      .programs-progress{display:none;}
-
-      .programs-track-outer{
-        overflow-x:scroll;overflow-y:hidden;
-        -webkit-overflow-scrolling:touch;
-        scroll-snap-type:x mandatory;
-        padding:0;
-        scrollbar-width:none;
-      }
-      .programs-track-outer::-webkit-scrollbar{display:none;}
-
-      .programs-track{
-        padding:0 calc(50vw - min(41vw,180px));
-        gap:16px;
-        transform:none !important;
-      }
-
+      /* Mobile: remove sticky — cards scroll normally, stacked vertically */
       .prog-card{
-        flex:0 0 min(82vw,360px);
-        height:auto;min-height:500px;
-        transform:scale(1) !important;
-        opacity:1 !important;
-        scroll-snap-align:center;
+        position:relative;
+        height:auto;min-height:100vh;min-height:100dvh;
       }
-      .prog-card::after,.prog-card::before{opacity:0 !important;}
+      .prog-card-inner{position:relative;inset:auto;display:flex;align-items:center;min-height:inherit;transform:none !important;filter:none !important;}
+      .prog-card-bg{position:absolute;inset:0;}
+      .prog-card-overlay{
+        background:linear-gradient(
+          to bottom,
+          rgba(10,10,10,.96) 0%,
+          rgba(10,10,10,.72) 35%,
+          rgba(10,10,10,.88) 75%,
+          rgba(10,10,10,1) 100%
+        );
+      }
+      .prog-card-content{
+        padding:calc(var(--nav-h) + 48px) 24px 80px;
+        max-width:100%;
+        gap:24px;
+      }
+      .prog-card-watermark{display:none;}
+      .prog-card-index{right:24px;top:calc(var(--nav-h)+16px);}
+      .prog-card-section-label{left:24px;bottom:24px;}
+      .prog-card-name{font-size:clamp(52px,14vw,80px);letter-spacing:-2px;}
+
+      /* Stats: 2×2 grid on mobile */
+      .prog-stats-row{flex-wrap:wrap;}
+      .prog-stat{flex:0 0 50%;border-bottom:1px solid var(--color-border);}
+      .prog-stat:nth-child(3),.prog-stat:nth-child(4){border-bottom:none;}
+      .prog-stat:nth-child(even){border-right:none;}
+
+      /* Override initial hidden states — no scroll animations on mobile */
+      .prog-level-row,.prog-card-name,.prog-stats-row,.prog-intensity,.prog-cta-row,.prog-exclusive{
+        opacity:1 !important;transform:none !important;
+      }
+      .prog-level-line{width:32px !important;}
     }
 
     @media(max-width:390px){
       .programs-intro{padding-left:20px;padding-right:20px;}
-      .prog-card{flex:0 0 min(90vw,340px);}
+      .prog-card-content{padding-left:20px;padding-right:20px;}
+      .prog-card-index{right:20px;}
+      .prog-card-section-label{left:20px;}
     }
   </style>
 </head>
@@ -1103,161 +1133,146 @@
       </div>
     </div>
 
-    <!-- Pinned horizontal viewport -->
-    <div class="programs-pin-wrap" id="programsPinWrap">
+    <!-- Stacked full-viewport cards -->
+    <div class="programs-stack" id="programsStack">
 
-      <div class="programs-hud">
-        <span class="programs-hud-label">Programas de Treinamento</span>
-        <span class="prog-counter" id="progCounter"><strong>01</strong> / 03</span>
-      </div>
-
-      <div class="programs-track-outer" id="programsTrackOuter">
-        <div class="programs-track" id="programsTrack">
-
-          <!-- Card 01 — Hipertrofia -->
-          <div class="prog-card" data-idx="0">
-            <span class="prog-card-bg-num">01</span>
-            <div class="prog-card-top">
-              <div class="prog-level-row">
-                <span class="prog-level-tag">Nível 01</span>
-                <span class="prog-level-sep"></span>
-              </div>
-              <h3 class="prog-card-name">Hipertrofia</h3>
+      <!-- Card 01 — Hipertrofia -->
+      <div class="prog-card prog-card--01" id="progCard01">
+        <div class="prog-card-inner" id="progInner01">
+          <div class="prog-card-bg"></div>
+          <div class="prog-card-overlay"></div>
+          <div class="prog-card-content">
+            <div class="prog-level-row" id="prog01Level">
+              <span class="prog-level-tag">Nível 01</span>
+              <span class="prog-level-line"></span>
             </div>
-            <div class="prog-card-body">
-              <div class="prog-stats">
-                <div class="prog-stat">
-                  <span class="prog-stat-val">4<sup>×</sup></span>
-                  <span class="prog-stat-lbl">Sessões / sem.</span>
-                </div>
-                <div class="prog-stat">
-                  <span class="prog-stat-val">75<sup>min</sup></span>
-                  <span class="prog-stat-lbl">Duração</span>
-                </div>
-                <div class="prog-stat">
-                  <span class="prog-stat-val">12<sup>sem</sup></span>
-                  <span class="prog-stat-lbl">Ciclo</span>
-                </div>
-                <div class="prog-stat">
-                  <span class="prog-stat-val">+<sup>18%</sup></span>
-                  <span class="prog-stat-lbl">Ganho médio</span>
-                </div>
+            <h3 class="prog-card-name" id="prog01Name">Hipertrofia</h3>
+            <div class="prog-stats-row" id="prog01Stats">
+              <div class="prog-stat">
+                <span class="prog-stat-val">4<sup>×</sup></span>
+                <span class="prog-stat-lbl">Sessões / sem.</span>
               </div>
-              <div class="prog-intensity">
-                <span class="prog-intensity-lbl">Intensidade</span>
-                <div class="prog-intensity-track">
-                  <div class="prog-pip filled"></div>
-                  <div class="prog-pip filled"></div>
-                  <div class="prog-pip filled"></div>
-                  <div class="prog-pip"></div>
-                  <div class="prog-pip"></div>
-                </div>
+              <div class="prog-stat">
+                <span class="prog-stat-val">75<sup>min</sup></span>
+                <span class="prog-stat-lbl">Duração</span>
+              </div>
+              <div class="prog-stat">
+                <span class="prog-stat-val">12<sup>sem</sup></span>
+                <span class="prog-stat-lbl">Ciclo</span>
+              </div>
+              <div class="prog-stat">
+                <span class="prog-stat-val">+<sup>18%</sup></span>
+                <span class="prog-stat-lbl">Ganho médio</span>
               </div>
             </div>
-            <div class="prog-card-bottom">
-              <button class="prog-cta">Iniciar <span class="prog-cta-line"></span><span class="prog-cta-head"></span></button>
-              <span class="prog-duration">12 semanas</span>
+            <div class="prog-intensity" id="prog01Int">
+              <span class="prog-intensity-lbl">Intensidade</span>
+              <div class="prog-intensity-track">
+                <div class="prog-pip filled"></div><div class="prog-pip filled"></div><div class="prog-pip filled"></div><div class="prog-pip"></div><div class="prog-pip"></div>
+              </div>
+            </div>
+            <div class="prog-cta-row" id="prog01Cta">
+              <button class="prog-cta"><span class="prog-cta-txt">Iniciar</span><span class="prog-cta-arr"><span class="prog-cta-line"></span><span class="prog-cta-head"></span></span></button>
+              <span class="prog-duration-tag">12 semanas</span>
             </div>
           </div>
-
-          <!-- Card 02 — Resistência -->
-          <div class="prog-card" data-idx="1">
-            <span class="prog-card-bg-num">02</span>
-            <div class="prog-card-top">
-              <div class="prog-level-row">
-                <span class="prog-level-tag">Nível 02</span>
-                <span class="prog-level-sep"></span>
-              </div>
-              <h3 class="prog-card-name">Resistência</h3>
-            </div>
-            <div class="prog-card-body">
-              <div class="prog-stats">
-                <div class="prog-stat">
-                  <span class="prog-stat-val">5<sup>×</sup></span>
-                  <span class="prog-stat-lbl">Sessões / sem.</span>
-                </div>
-                <div class="prog-stat">
-                  <span class="prog-stat-val">60<sup>min</sup></span>
-                  <span class="prog-stat-lbl">Duração</span>
-                </div>
-                <div class="prog-stat">
-                  <span class="prog-stat-val">8<sup>sem</sup></span>
-                  <span class="prog-stat-lbl">Ciclo</span>
-                </div>
-                <div class="prog-stat">
-                  <span class="prog-stat-val">+<sup>24%</sup></span>
-                  <span class="prog-stat-lbl">Ganho médio</span>
-                </div>
-              </div>
-              <div class="prog-intensity">
-                <span class="prog-intensity-lbl">Intensidade</span>
-                <div class="prog-intensity-track">
-                  <div class="prog-pip filled"></div>
-                  <div class="prog-pip filled"></div>
-                  <div class="prog-pip filled"></div>
-                  <div class="prog-pip filled"></div>
-                  <div class="prog-pip"></div>
-                </div>
-              </div>
-            </div>
-            <div class="prog-card-bottom">
-              <button class="prog-cta">Iniciar <span class="prog-cta-line"></span><span class="prog-cta-head"></span></button>
-              <span class="prog-duration">8 semanas</span>
-            </div>
-          </div>
-
-          <!-- Card 03 — Elite -->
-          <div class="prog-card" data-idx="2">
-            <span class="prog-card-bg-num">03</span>
-            <div class="prog-card-top">
-              <div class="prog-level-row">
-                <span class="prog-level-tag">Nível 03</span>
-                <span class="prog-level-sep"></span>
-              </div>
-              <div class="prog-exclusive"><span class="prog-exclusive-dot"></span>Exclusivo</div>
-              <h3 class="prog-card-name">Elite</h3>
-            </div>
-            <div class="prog-card-body">
-              <div class="prog-stats">
-                <div class="prog-stat">
-                  <span class="prog-stat-val">6<sup>×</sup></span>
-                  <span class="prog-stat-lbl">Sessões / sem.</span>
-                </div>
-                <div class="prog-stat">
-                  <span class="prog-stat-val">90<sup>min</sup></span>
-                  <span class="prog-stat-lbl">Duração</span>
-                </div>
-                <div class="prog-stat">
-                  <span class="prog-stat-val">16<sup>sem</sup></span>
-                  <span class="prog-stat-lbl">Ciclo</span>
-                </div>
-                <div class="prog-stat">
-                  <span class="prog-stat-val">+<sup>35%</sup></span>
-                  <span class="prog-stat-lbl">Ganho médio</span>
-                </div>
-              </div>
-              <div class="prog-intensity">
-                <span class="prog-intensity-lbl">Intensidade</span>
-                <div class="prog-intensity-track">
-                  <div class="prog-pip filled"></div>
-                  <div class="prog-pip filled"></div>
-                  <div class="prog-pip filled"></div>
-                  <div class="prog-pip filled"></div>
-                  <div class="prog-pip filled"></div>
-                </div>
-              </div>
-            </div>
-            <div class="prog-card-bottom">
-              <button class="prog-cta">Iniciar <span class="prog-cta-line"></span><span class="prog-cta-head"></span></button>
-              <span class="prog-duration">16 semanas</span>
-            </div>
-          </div>
-
+          <span class="prog-card-watermark">01</span>
+          <div class="prog-card-index"><strong>01</strong> / 03</div>
+          <div class="prog-card-section-label"><span class="prog-section-line"></span><span class="prog-section-txt">Programas de Treinamento</span></div>
         </div>
       </div>
 
-      <div class="programs-progress">
-        <div class="programs-progress-fill" id="progressFill"></div>
+      <!-- Card 02 — Resistência -->
+      <div class="prog-card prog-card--02" id="progCard02">
+        <div class="prog-card-inner" id="progInner02">
+          <div class="prog-card-bg"></div>
+          <div class="prog-card-overlay"></div>
+          <div class="prog-card-content">
+            <div class="prog-level-row" id="prog02Level">
+              <span class="prog-level-tag">Nível 02</span>
+              <span class="prog-level-line"></span>
+            </div>
+            <h3 class="prog-card-name" id="prog02Name">Resistência</h3>
+            <div class="prog-stats-row" id="prog02Stats">
+              <div class="prog-stat">
+                <span class="prog-stat-val">5<sup>×</sup></span>
+                <span class="prog-stat-lbl">Sessões / sem.</span>
+              </div>
+              <div class="prog-stat">
+                <span class="prog-stat-val">60<sup>min</sup></span>
+                <span class="prog-stat-lbl">Duração</span>
+              </div>
+              <div class="prog-stat">
+                <span class="prog-stat-val">8<sup>sem</sup></span>
+                <span class="prog-stat-lbl">Ciclo</span>
+              </div>
+              <div class="prog-stat">
+                <span class="prog-stat-val">+<sup>24%</sup></span>
+                <span class="prog-stat-lbl">Ganho médio</span>
+              </div>
+            </div>
+            <div class="prog-intensity" id="prog02Int">
+              <span class="prog-intensity-lbl">Intensidade</span>
+              <div class="prog-intensity-track">
+                <div class="prog-pip filled"></div><div class="prog-pip filled"></div><div class="prog-pip filled"></div><div class="prog-pip filled"></div><div class="prog-pip"></div>
+              </div>
+            </div>
+            <div class="prog-cta-row" id="prog02Cta">
+              <button class="prog-cta"><span class="prog-cta-txt">Iniciar</span><span class="prog-cta-arr"><span class="prog-cta-line"></span><span class="prog-cta-head"></span></span></button>
+              <span class="prog-duration-tag">8 semanas</span>
+            </div>
+          </div>
+          <span class="prog-card-watermark">02</span>
+          <div class="prog-card-index"><strong>02</strong> / 03</div>
+          <div class="prog-card-section-label"><span class="prog-section-line"></span><span class="prog-section-txt">Programas de Treinamento</span></div>
+        </div>
+      </div>
+
+      <!-- Card 03 — Elite -->
+      <div class="prog-card prog-card--03" id="progCard03">
+        <div class="prog-card-inner" id="progInner03">
+          <div class="prog-card-bg"></div>
+          <div class="prog-card-overlay"></div>
+          <div class="prog-card-content">
+            <div class="prog-level-row" id="prog03Level">
+              <span class="prog-level-tag">Nível 03</span>
+              <span class="prog-level-line"></span>
+            </div>
+            <div class="prog-exclusive" id="prog03Excl"><span class="prog-exclusive-dot"></span>Exclusivo</div>
+            <h3 class="prog-card-name" id="prog03Name">Elite</h3>
+            <div class="prog-stats-row" id="prog03Stats">
+              <div class="prog-stat">
+                <span class="prog-stat-val">6<sup>×</sup></span>
+                <span class="prog-stat-lbl">Sessões / sem.</span>
+              </div>
+              <div class="prog-stat">
+                <span class="prog-stat-val">90<sup>min</sup></span>
+                <span class="prog-stat-lbl">Duração</span>
+              </div>
+              <div class="prog-stat">
+                <span class="prog-stat-val">16<sup>sem</sup></span>
+                <span class="prog-stat-lbl">Ciclo</span>
+              </div>
+              <div class="prog-stat">
+                <span class="prog-stat-val">+<sup>35%</sup></span>
+                <span class="prog-stat-lbl">Ganho médio</span>
+              </div>
+            </div>
+            <div class="prog-intensity" id="prog03Int">
+              <span class="prog-intensity-lbl">Intensidade</span>
+              <div class="prog-intensity-track">
+                <div class="prog-pip filled"></div><div class="prog-pip filled"></div><div class="prog-pip filled"></div><div class="prog-pip filled"></div><div class="prog-pip filled"></div>
+              </div>
+            </div>
+            <div class="prog-cta-row" id="prog03Cta">
+              <button class="prog-cta"><span class="prog-cta-txt">Iniciar</span><span class="prog-cta-arr"><span class="prog-cta-line"></span><span class="prog-cta-head"></span></span></button>
+              <span class="prog-duration-tag">16 semanas</span>
+            </div>
+          </div>
+          <span class="prog-card-watermark">03</span>
+          <div class="prog-card-index"><strong>03</strong> / 03</div>
+          <div class="prog-card-section-label"><span class="prog-section-line"></span><span class="prog-section-txt">Programas de Treinamento</span></div>
+        </div>
       </div>
 
     </div>
@@ -1783,7 +1798,7 @@
     animateManifesto();
 
     /* ═══════════════════════════════════════════════════════════════════════
-       SESSÃO 03 — PROGRAMAS
+       SESSÃO 03 — PROGRAMAS (STACKED FULL-VIEWPORT)
     ═══════════════════════════════════════════════════════════════════════ */
     function initPrograms() {
       /* Intro scroll-in */
@@ -1804,53 +1819,67 @@
         scrollTrigger:{ trigger:'.programs-intro', start:'top 70%', toggleActions:'play none none reverse' }
       });
 
-      if (isMobile) return; /* mobile: native scroll + snap */
+      if (isMobile) return; /* mobile: position:relative cards, no animations */
 
-      const track   = document.getElementById('programsTrack');
-      const cards   = gsap.utils.toArray('.prog-card');
-      const fill    = document.getElementById('progressFill');
-      const counter = document.getElementById('progCounter');
-
-      /* Measure layout after CSS applies */
-      const cardW     = cards[0].offsetWidth;
-      const gap       = parseInt(getComputedStyle(track).gap) || 40;
-      const totalMove = (cards.length - 1) * (cardW + gap);
-
-      /* Initial state: card 0 active, rest inactive */
-      let activeIdx = 0;
-      gsap.set(cards[0], { scale:1, opacity:1 });
-      gsap.set(cards.slice(1), { scale:.86, opacity:.35 });
-      cards[0].classList.add('is-active');
-
-      function setActive(idx) {
-        if (idx === activeIdx) return;
-        activeIdx = idx;
-        cards.forEach((c, i) => {
-          const on = i === idx;
-          gsap.to(c, { scale:on?1:.86, opacity:on?1:.35, duration:.55, ease:'power3.out', overwrite:true });
-          c.classList.toggle('is-active', on);
-        });
-        if (counter) counter.innerHTML = `<strong>${String(idx+1).padStart(2,'0')}</strong> / 03`;
+      /* ── Content entrance animation per card ── */
+      function animateCardIn(n) {
+        const tl = gsap.timeline({ defaults:{ ease:'power3.out' } });
+        tl.to(`#prog0${n}Level`,  { opacity:1, x:0,  duration:.7 }, 0);
+        tl.to(`#prog0${n}Level .prog-level-line`, { width:32, duration:.6, ease:'power3.out' }, .1);
+        if (n === 3) tl.to('#prog03Excl', { opacity:1, x:0, duration:.6 }, .12);
+        tl.to(`#prog0${n}Name`,   { opacity:1, y:0,  duration:.9, ease:'power4.out' }, .18);
+        tl.to(`#prog0${n}Stats`,  { opacity:1, y:0,  duration:.7 }, .42);
+        tl.to(`#prog0${n}Int`,    { opacity:1,        duration:.6 }, .56);
+        tl.to(`#prog0${n}Cta`,    { opacity:1, y:0,  duration:.7 }, .66);
       }
 
-      gsap.to(track, {
-        x: -totalMove,
+      function resetCardIn(n) {
+        gsap.set(`#prog0${n}Level`,  { opacity:0, x:-24 });
+        gsap.set(`#prog0${n}Level .prog-level-line`, { width:0 });
+        if (n === 3) gsap.set('#prog03Excl', { opacity:0, x:-24 });
+        gsap.set(`#prog0${n}Name`,   { opacity:0, y:40 });
+        gsap.set(`#prog0${n}Stats`,  { opacity:0, y:20 });
+        gsap.set(`#prog0${n}Int`,    { opacity:0 });
+        gsap.set(`#prog0${n}Cta`,    { opacity:0, y:16 });
+      }
+
+      /* Card 1 animates when section enters viewport */
+      ScrollTrigger.create({
+        trigger: '#programsStack',
+        start: 'top 80%',
+        onEnter: () => animateCardIn(1),
+        onLeaveBack: () => resetCardIn(1)
+      });
+
+      /* Cards 2 & 3: animate when they reach top (become active card) */
+      [2, 3].forEach(n => {
+        ScrollTrigger.create({
+          trigger: `#progCard0${n}`,
+          start: 'top top',
+          onEnter:     () => animateCardIn(n),
+          onLeaveBack: () => resetCardIn(n)
+        });
+      });
+
+      /* Scale-back effect on cards being covered by the next */
+      gsap.to('#progInner01', {
+        scale: .96, filter: 'brightness(0.65)',
         ease: 'none',
         scrollTrigger: {
-          trigger: '#programsPinWrap',
-          start: 'top top',
-          end: () => '+=' + (totalMove + window.innerHeight * .8),
-          scrub: 1.2,
-          pin: true,
-          anticipatePin: 1,
-          onUpdate(self) {
-            if (fill) fill.style.width = (self.progress * 100) + '%';
-            const newIdx = Math.min(
-              Math.round(self.progress * (cards.length - 1)),
-              cards.length - 1
-            );
-            setActive(newIdx);
-          }
+          trigger: '#progCard02',
+          start: 'top 55%',
+          end:   'top top',
+          scrub: 1
+        }
+      });
+      gsap.to('#progInner02', {
+        scale: .96, filter: 'brightness(0.65)',
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '#progCard03',
+          start: 'top 55%',
+          end:   'top top',
+          scrub: 1
         }
       });
     }
