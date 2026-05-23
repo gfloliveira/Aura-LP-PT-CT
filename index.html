@@ -396,7 +396,7 @@
     .manifesto{
       position:relative;
       background:var(--color-bg);
-      overflow:hidden;
+      overflow:clip; /* clip visual sem quebrar position:sticky */
     }
 
     /* Giant watermark number */
@@ -423,6 +423,7 @@
     .manifesto-inner{
       display:grid;
       grid-template-columns:46% 54%;
+      align-items:start; /* colunas com alturas independentes — obrigatório pro sticky funcionar */
       min-height:220vh; /* scroll space for scrub */
       position:relative;
       z-index:1;
