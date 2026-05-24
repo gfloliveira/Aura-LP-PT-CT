@@ -115,7 +115,7 @@
     }
 
     /* Flow field canvas */
-    #flowCanvas{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;}
+    #flowCanvas{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;}
 
     /* Radial bg glow */
     .hero-bg{
@@ -405,7 +405,6 @@
 
     .manifesto{
       position:relative;
-      background:var(--color-bg);
       overflow:clip; /* clip visual sem quebrar position:sticky */
     }
 
@@ -638,7 +637,7 @@
 
     /* ═══ SESSÃO 03 — PROGRAMAS (STACKED) ════════════════════════════════════ */
 
-    .programs{position:relative;background:var(--color-bg);}
+    .programs{position:relative;}
 
     .programs-separator{
       width:100%;height:1px;
@@ -918,7 +917,7 @@
 
     /* ═══ SESSÃO 04 — RESULTADOS ════════════════════════════════════════════ */
 
-    .results{position:relative;background:var(--color-bg);overflow:clip;}
+    .results{position:relative;overflow:clip;}
 
     .results-separator{
       width:100%;height:1px;
@@ -1088,7 +1087,6 @@
     /* ── CTA FINAL ────────────────────────────────────────────────────────── */
     .cta-final{
       position:relative;
-      background:var(--color-bg);
       overflow:clip;
       padding:clamp(100px,14vh,160px) 56px clamp(80px,10vh,120px);
       display:flex;
@@ -1369,6 +1367,7 @@
   <div class="cursor-dot"  id="cursorDot"></div>
   <div class="cursor-ring" id="cursorRing"></div>
 
+  <canvas id="flowCanvas"></canvas>
   <div id="loader">
     <div class="loader-wordmark">APEX<em>.</em></div>
     <div class="loader-track"><div class="loader-fill" id="loaderFill"></div></div>
@@ -1408,7 +1407,6 @@
   <section class="hero" id="hero">
     <div class="hero-bg"></div>
     <div class="hero-noise"></div>
-    <canvas id="flowCanvas"></canvas>
 
     <!-- LEFT — content -->
     <div class="hero-left">
@@ -1974,27 +1972,27 @@
     const ctx    = canvas.getContext('2d');
     let W, H, particles = [];
     const isMobile = window.innerWidth < 768;
-    const COUNT    = isMobile ? 80 : 200;
+    const COUNT    = isMobile ? 100 : 240;
 
     /* State controlled by GSAP during the reveal sequence */
     const flowState = { convergence: 0, tx: 0, ty: 0 };
 
     function resize() {
-      W = canvas.width  = canvas.offsetWidth  || window.innerWidth;
-      H = canvas.height = canvas.offsetHeight || window.innerHeight;
+      W = canvas.width  = window.innerWidth;
+      H = canvas.height = window.innerHeight;
       /* On mobile the athlete panel sits at the TOP (~52vw tall).
          On desktop it sits in the right 46% of the viewport.          */
       flowState.tx = isMobile ? W * 0.5  : W * 0.77;
       flowState.ty = isMobile ? H * 0.14 : H * 0.52;
     }
 
-    /* Lightweight sin-based 2D noise — organic but fast */
+    /* Smooth sin-based 2D noise — wider, more organic swirls */
     function flowAngle(x, y, t) {
-      const s = 0.0024;
+      const s = 0.0016;
       return (
-        Math.sin(x * s       + t * 0.26 ) * Math.cos(y * s * 0.75 + t * 0.18) * Math.PI * 2.6 +
-        Math.sin((x - y) * s * 0.38 - t * 0.12) * Math.PI * 0.9 +
-        Math.cos(x * s * 1.8 + y * s * 0.6 - t * 0.09) * Math.PI * 0.5
+        Math.sin(x * s       + t * 0.18) * Math.cos(y * s * 0.7 + t * 0.13) * Math.PI * 2.4 +
+        Math.sin((x - y) * s * 0.32 - t * 0.09) * Math.PI * 0.8 +
+        Math.cos(x * s * 1.5 + y * s * 0.5 - t * 0.07) * Math.PI * 0.45
       );
     }
 
@@ -2002,24 +2000,28 @@
       constructor() { this.init(true); }
 
       init(randomLife = false) {
-        this.x    = Math.random() * W;
-        this.y    = Math.random() * H;
-        this.size = Math.random() * 1.3 + 0.2;
-        this.spd  = Math.random() * 0.55 + 0.18;
-        this.life = randomLife ? Math.random() * 0.8 : 0;
-        this.max  = Math.random() * 0.55 + 0.45;
-        this.isOrange = Math.random() < 0.055;
+        /* Spawn on a random edge — eliminates mid-screen pop-in */
+        const edge = Math.floor(Math.random() * 4);
+        if      (edge === 0) { this.x = Math.random() * W; this.y = -6; }
+        else if (edge === 1) { this.x = W + 6; this.y = Math.random() * H; }
+        else if (edge === 2) { this.x = Math.random() * W; this.y = H + 6; }
+        else                 { this.x = -6; this.y = Math.random() * H; }
+
+        this.size = Math.random() * 1.1 + 0.25;
+        this.spd  = Math.random() * 0.38 + 0.14;
+        this.life = randomLife ? Math.random() * 0.9 : 0;
+        this.max  = Math.random() * 0.7 + 0.55;
+        this.isOrange = Math.random() < 0.03;
         this.trail    = [];
-        this.trailMax = this.isOrange ? 10 : 5;
+        this.trailMax = this.isOrange ? 30 : 16;
       }
 
       get alpha() {
         const p = this.life / this.max;
-        return p < 0.12 ? p / 0.12 : p > 0.88 ? (1 - p) / 0.12 : 1;
+        return p < 0.1 ? p / 0.1 : p > 0.85 ? (1 - p) / 0.15 : 1;
       }
 
       update(t) {
-        /* Store trail */
         this.trail.push({ x: this.x, y: this.y });
         if (this.trail.length > this.trailMax) this.trail.shift();
 
@@ -2033,7 +2035,6 @@
           const dx   = flowState.tx - this.x;
           const dy   = flowState.ty - this.y;
           const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-          /* Influence falls off with distance; closer = stronger pull */
           const infl = Math.max(0, 1 - dist / (W * 0.55));
           const pull = conv * infl * 0.22;
           vx += (dx / dist) * pull;
@@ -2042,9 +2043,9 @@
 
         this.x   += vx;
         this.y   += vy;
-        this.life += 0.0038;
+        this.life += 0.003;
 
-        if (this.life > this.max || this.x < -12 || this.x > W + 12 || this.y < -12 || this.y > H + 12) {
+        if (this.life > this.max || this.x < -20 || this.x > W + 20 || this.y < -20 || this.y > H + 20) {
           this.init();
         }
       }
@@ -2052,33 +2053,37 @@
       draw() {
         const a = this.alpha;
         if (a < 0.01) return;
+        const n = this.trail.length;
 
-        /* Trail */
-        if (this.trail.length > 1) {
-          ctx.beginPath();
-          ctx.moveTo(this.trail[0].x, this.trail[0].y);
-          for (let i = 1; i < this.trail.length; i++) ctx.lineTo(this.trail[i].x, this.trail[i].y);
-          ctx.lineTo(this.x, this.y);
-          ctx.strokeStyle = this.isOrange
-            ? `rgba(255,69,0,${a * 0.55})`
-            : `rgba(242,242,242,${a * 0.14})`;
-          ctx.lineWidth = this.size * 0.55;
-          ctx.stroke();
+        /* Gradient trail: each segment gets progressively brighter toward head */
+        if (n > 1) {
+          for (let i = 0; i < n - 1; i++) {
+            const t = (i + 1) / n;
+            const segA = a * t * (this.isOrange ? 0.5 : 0.11);
+            ctx.beginPath();
+            ctx.moveTo(this.trail[i].x, this.trail[i].y);
+            ctx.lineTo(this.trail[i + 1].x, this.trail[i + 1].y);
+            ctx.strokeStyle = this.isOrange
+              ? `rgba(255,69,0,${segA})`
+              : `rgba(220,220,220,${segA})`;
+            ctx.lineWidth = this.size * (0.25 + t * 0.55);
+            ctx.stroke();
+          }
         }
 
-        /* Dot */
+        /* Head dot */
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fillStyle = this.isOrange
-          ? `rgba(255,69,0,${a * 0.85})`
-          : `rgba(242,242,242,${a * 0.32})`;
+          ? `rgba(255,80,0,${a * 0.9})`
+          : `rgba(242,242,242,${a * 0.28})`;
         ctx.fill();
 
         /* Glow halo on orange sparks */
-        if (this.isOrange && a > 0.4) {
+        if (this.isOrange && a > 0.35) {
           ctx.beginPath();
-          ctx.arc(this.x, this.y, this.size * 4, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(255,69,0,${a * 0.06})`;
+          ctx.arc(this.x, this.y, this.size * 5, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255,69,0,${a * 0.05})`;
           ctx.fill();
         }
       }
@@ -2152,8 +2157,9 @@
     let tick = 0;
     function drawFlow() {
       requestAnimationFrame(drawFlow);
-      ctx.clearRect(0, 0, W, H);
-      tick += 0.5;
+      ctx.fillStyle = 'rgba(10,10,10,0.09)';
+      ctx.fillRect(0, 0, W, H);
+      tick += 0.42;
       particles.forEach(p => { p.update(tick); p.draw(); });
     }
 
