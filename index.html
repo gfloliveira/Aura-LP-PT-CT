@@ -115,7 +115,7 @@
     }
 
     /* Flow field canvas */
-    #flowCanvas{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;}
+    /* Flow field canvas — removed, replaced by gradient mesh */
 
     /* Radial bg glow */
     .hero-bg{
@@ -1480,7 +1480,7 @@
   <section class="hero" id="hero">
     <div class="hero-bg"></div>
     <div class="hero-noise"></div>
-    <canvas id="flowCanvas"></canvas>
+
 
     <!-- LEFT — content -->
     <div class="hero-left">
@@ -2039,122 +2039,7 @@
       });
     }
 
-    /* ════════════════════════════════════════════════════════════════════════
-       FLOW FIELD — Perlin-style noise particle system
-    ════════════════════════════════════════════════════════════════════════ */
-    const canvas = document.getElementById('flowCanvas');
-    const ctx    = canvas.getContext('2d');
-    let W, H, particles = [];
     const isMobile = window.innerWidth < 768;
-    const COUNT    = isMobile ? 80 : 200;
-
-    /* State controlled by GSAP during the reveal sequence */
-    const flowState = { convergence: 0, tx: 0, ty: 0 };
-
-    function resize() {
-      W = canvas.width  = canvas.offsetWidth  || window.innerWidth;
-      H = canvas.height = canvas.offsetHeight || window.innerHeight;
-      /* On mobile the athlete panel sits at the TOP (~52vw tall).
-         On desktop it sits in the right 46% of the viewport.          */
-      flowState.tx = isMobile ? W * 0.5  : W * 0.77;
-      flowState.ty = isMobile ? H * 0.14 : H * 0.52;
-    }
-
-    /* Lightweight sin-based 2D noise — organic but fast */
-    function flowAngle(x, y, t) {
-      const s = 0.0024;
-      return (
-        Math.sin(x * s       + t * 0.26 ) * Math.cos(y * s * 0.75 + t * 0.18) * Math.PI * 2.6 +
-        Math.sin((x - y) * s * 0.38 - t * 0.12) * Math.PI * 0.9 +
-        Math.cos(x * s * 1.8 + y * s * 0.6 - t * 0.09) * Math.PI * 0.5
-      );
-    }
-
-    class Particle {
-      constructor() { this.init(true); }
-
-      init(randomLife = false) {
-        this.x    = Math.random() * W;
-        this.y    = Math.random() * H;
-        this.size = Math.random() * 1.3 + 0.2;
-        this.spd  = Math.random() * 0.55 + 0.18;
-        this.life = randomLife ? Math.random() * 0.8 : 0;
-        this.max  = Math.random() * 0.55 + 0.45;
-        this.isOrange = Math.random() < 0.055;
-        this.trail    = [];
-        this.trailMax = this.isOrange ? 10 : 5;
-      }
-
-      get alpha() {
-        const p = this.life / this.max;
-        return p < 0.12 ? p / 0.12 : p > 0.88 ? (1 - p) / 0.12 : 1;
-      }
-
-      update(t) {
-        /* Store trail */
-        this.trail.push({ x: this.x, y: this.y });
-        if (this.trail.length > this.trailMax) this.trail.shift();
-
-        const a  = flowAngle(this.x, this.y, t);
-        let vx   = Math.cos(a) * this.spd;
-        let vy   = Math.sin(a) * this.spd;
-
-        /* Convergence pull during athlete reveal */
-        const conv = flowState.convergence;
-        if (conv > 0.01) {
-          const dx   = flowState.tx - this.x;
-          const dy   = flowState.ty - this.y;
-          const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-          /* Influence falls off with distance; closer = stronger pull */
-          const infl = Math.max(0, 1 - dist / (W * 0.55));
-          const pull = conv * infl * 0.22;
-          vx += (dx / dist) * pull;
-          vy += (dy / dist) * pull;
-        }
-
-        this.x   += vx;
-        this.y   += vy;
-        this.life += 0.0038;
-
-        if (this.life > this.max || this.x < -12 || this.x > W + 12 || this.y < -12 || this.y > H + 12) {
-          this.init();
-        }
-      }
-
-      draw() {
-        const a = this.alpha;
-        if (a < 0.01) return;
-
-        /* Trail */
-        if (this.trail.length > 1) {
-          ctx.beginPath();
-          ctx.moveTo(this.trail[0].x, this.trail[0].y);
-          for (let i = 1; i < this.trail.length; i++) ctx.lineTo(this.trail[i].x, this.trail[i].y);
-          ctx.lineTo(this.x, this.y);
-          ctx.strokeStyle = this.isOrange
-            ? `rgba(255,69,0,${a * 0.55})`
-            : `rgba(242,242,242,${a * 0.14})`;
-          ctx.lineWidth = this.size * 0.55;
-          ctx.stroke();
-        }
-
-        /* Dot */
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fillStyle = this.isOrange
-          ? `rgba(255,69,0,${a * 0.85})`
-          : `rgba(242,242,242,${a * 0.32})`;
-        ctx.fill();
-
-        /* Glow halo on orange sparks */
-        if (this.isOrange && a > 0.4) {
-          ctx.beginPath();
-          ctx.arc(this.x, this.y, this.size * 4, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(255,69,0,${a * 0.06})`;
-          ctx.fill();
-        }
-      }
-    }
 
     /* ─── ATHLETE IMAGE — flood-fill white background removal ──────────────── */
     function removeWhiteBg(img) {
@@ -2214,24 +2099,6 @@
       }
     }
     initAthleteImage();
-
-    /* Init & animate */
-    function initFlow() {
-      resize();
-      particles = Array.from({ length: COUNT }, () => new Particle());
-    }
-
-    let tick = 0;
-    function drawFlow() {
-      requestAnimationFrame(drawFlow);
-      ctx.clearRect(0, 0, W, H);
-      tick += 0.5;
-      particles.forEach(p => { p.update(tick); p.draw(); });
-    }
-
-    window.addEventListener('resize', () => { resize(); });
-    initFlow();
-    drawFlow(); /* starts immediately — flows behind the loader */
 
     /* ─── LOADER ────────────────────────────────────────────────────────────── */
     const loaderFill = document.getElementById('loaderFill');
@@ -2295,22 +2162,12 @@
         0.38
       );
 
-      /* ── CONVERGENCE — particles rush toward athlete panel ── */
-      tl.call(() => {
-        gsap.to(flowState, { convergence: 1, duration: 0.8, ease: 'power2.in' });
-      }, [], 1.05);
-
       /* ── ATHLETE REVEAL — clip-path wipe from bottom ── */
       tl.fromTo('#athleteVisual',
         { clipPath: 'inset(100% 0 0% 0)' },
         { clipPath: 'inset(0% 0 0% 0)', duration: 1.1, ease: 'power4.out' },
         1.3
       );
-
-      /* Release convergence after reveal */
-      tl.call(() => {
-        gsap.to(flowState, { convergence: 0, duration: 2.2, ease: 'power2.out' });
-      }, [], 2.1);
 
       /* Hero bottom */
       tl.fromTo('#heroBottom', { y: 32, opacity: 0 }, { y: 0, opacity: 1, duration: 0.9 }, 1.25);
