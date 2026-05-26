@@ -1344,9 +1344,22 @@
       font-family:'Brittany Signature', 'Great Vibes', cursive;
       font-size:clamp(26px,3vw,34px);
       font-weight:400;
-      color:rgba(242,242,242,.72);
+      color:rgba(242,242,242,.82);
       line-height:1;
       letter-spacing:1px;
+      text-decoration:none;
+      text-shadow:
+        0 0 18px rgba(255,255,255,.45),
+        0 0 40px rgba(180,150,255,.28),
+        0 0 80px rgba(140,100,255,.12);
+      transition:text-shadow .4s ease, color .4s ease;
+    }
+    .footer-credit-name:hover{
+      color:rgba(242,242,242,1);
+      text-shadow:
+        0 0 24px rgba(255,255,255,.65),
+        0 0 55px rgba(180,150,255,.45),
+        0 0 100px rgba(140,100,255,.22);
     }
 
     /* ── S05 RESPONSIVE ───────────────────────────────────────────────────── */
@@ -2029,7 +2042,7 @@
     <div class="footer-credit">
       <span class="footer-credit-label">Code &amp; Design by</span>
       <span class="footer-credit-dot"></span>
-      <span class="footer-credit-name">Aura</span>
+      <a href="https://aura.xyz.br" class="footer-credit-name" target="_blank" rel="noopener">Aura</a>
     </div>
   </footer>
 
