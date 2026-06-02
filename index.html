@@ -320,7 +320,7 @@
 
     /* ─── SCROLL CUE ────────────────────────────────────────────────────────── */
     .scroll-cue{
-      position:absolute;bottom:36px;left:56px;z-index:5;
+      position:absolute;bottom:36px;left:50%;transform:translateX(-50%);z-index:5;
       display:flex;align-items:center;gap:16px;opacity:0;
     }
     .scroll-cue-line{position:relative;width:1px;height:52px;background:var(--color-border);overflow:hidden;}
@@ -348,7 +348,6 @@
       .hero-left{padding:calc(var(--nav-h)+28px) 36px 80px 36px;flex:0 0 52%;}
       .hero-right{flex:0 0 48%;}
       .hero-title{font-size:clamp(54px,7.5vw,120px);}
-      .scroll-cue{left:36px;}
       .hero-badge{right:36px;}
     }
 
