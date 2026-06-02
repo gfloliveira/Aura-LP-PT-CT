@@ -433,7 +433,7 @@
       display:grid;
       grid-template-columns:46% 54%;
       align-items:start; /* colunas com alturas independentes — obrigatório pro sticky funcionar */
-      min-height:220vh; /* scroll space for scrub */
+      min-height:160vh; /* scroll space for scrub */
       position:relative;
       z-index:1;
     }
@@ -1659,8 +1659,8 @@
 
         <div class="manifesto-body" id="manifestoBody">
           <span class="manifesto-quote-mark">"</span>
-          <p>Não existe atalho. Excelência não é um destino — é o resultado de escolhas repetidas no silêncio, quando ninguém está assistindo. Quando o cansaço pede pausa e você continua. Quando o conforto oferece uma saída e você a recusa.</p>
-          <p>Na APEX, não treinamos corpos. Forjamos caráter. Cada sessão é uma negociação com seus próprios limites — e estamos aqui para garantir que você ganhe essa negociação, sempre.</p>
+          <p>Não existe atalho. Excelência é o resultado de escolhas repetidas no silêncio — quando ninguém está assistindo, quando o cansaço pede pausa e você continua.</p>
+          <p>Na APEX, não treinamos corpos. Forjamos caráter. Cada sessão é uma negociação com seus próprios limites.</p>
           <p>Isso não é para todo mundo. Mas pode ser para você.</p>
         </div>
 
@@ -2447,8 +2447,8 @@
           stagger: { each: 0.018 },
           scrollTrigger: {
             trigger: '#manifestoBody',
-            start: 'top 72%',
-            end: 'bottom 22%',
+            start: 'top 80%',
+            end: 'bottom 30%',
             scrub: 1.8,
           }
         }
