@@ -2252,6 +2252,10 @@
         loaderPct.textContent  = n + '%';
       },
       onComplete() {
+        /* Reseta scroll ANTES do loader deslizar — enquanto ainda cobre tudo */
+        window.scrollTo(0, 0);
+        lenis.scrollTo(0, { immediate: true });
+
         /* Split + hide chars BEFORE loader exits — prevents FOUC flash */
         splitChars(document.getElementById('heroTitle'));
         gsap.set('.char', { y: '110%', rotateX: -80, opacity: 0 });
@@ -2260,8 +2264,6 @@
           yPercent: -100, duration: 1.1, ease: 'power4.inOut',
           onComplete() {
             loader.remove();
-            window.scrollTo(0, 0);
-            lenis.scrollTo(0, { immediate: true });
             lenis.start();
             ScrollTrigger.refresh();
             runIntro();
