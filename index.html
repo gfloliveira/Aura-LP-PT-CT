@@ -2532,39 +2532,48 @@
       /* Estado inicial: bg levemente zoom-in em todos os cards */
       gsap.set('.prog-card-bg', { scale:1.07 });
 
+      /* FIX 1: refs armazenadas — kill garante que in/out nunca coexistam */
+      const cardTl = {};
+
       /* ── Entrada de card ── */
       function animateCardIn(n) {
-        gsap.killTweensOf(`#progCard0${n} .prog-card-bg`);
+        /* FIX 1+2: mata timeline inteiro (bg + conteúdo) */
+        if (cardTl[n]) cardTl[n].kill();
+
         const tl = gsap.timeline({ defaults:{ ease:'power3.out' } });
-        tl.to(`#progCard0${n} .prog-card-bg`, { scale:1, duration:1.5, ease:'power3.out' }, 0);
-        tl.to(`#prog0${n}Level`,  { opacity:1, x:0,  duration:.7 }, 0);
-        tl.to(`#prog0${n}Level .prog-level-line`, { width:32, duration:.6, ease:'power3.out' }, .1);
-        if (n === 3) tl.to('#prog03Excl', { opacity:1, x:0, duration:.6 }, .12);
-        tl.to(`#prog0${n}Name`,   { opacity:1, y:0,  duration:.9, ease:'power4.out' }, .18);
-        tl.to(`#prog0${n}Stats`,  { opacity:1, y:0,  duration:.7 }, .42);
-        tl.to(`#prog0${n}Int`,    { opacity:1,        duration:.6 }, .56);
-        tl.to(`#prog0${n}Cta`,    { opacity:1, y:0,  duration:.7 }, .66);
+        /* FIX 3: fromTo garante from-state correto mesmo com kill mid-animation */
+        tl.fromTo(`#progCard0${n} .prog-card-bg`, { scale:1.07 }, { scale:1, duration:1.5 }, 0);
+        tl.fromTo(`#prog0${n}Level`,  { opacity:0, x:-24 }, { opacity:1, x:0,  duration:.7 }, 0);
+        tl.fromTo(`#prog0${n}Level .prog-level-line`, { width:0 }, { width:32, duration:.6 }, .1);
+        if (n === 3) tl.fromTo('#prog03Excl', { opacity:0, x:-24 }, { opacity:1, x:0, duration:.6 }, .12);
+        tl.fromTo(`#prog0${n}Name`,  { opacity:0, y:40 },  { opacity:1, y:0, duration:.9, ease:'power4.out' }, .18);
+        tl.fromTo(`#prog0${n}Stats`, { opacity:0, y:20 },  { opacity:1, y:0, duration:.7 }, .42);
+        tl.fromTo(`#prog0${n}Int`,   { opacity:0 },         { opacity:1, duration:.6 }, .56);
+        tl.fromTo(`#prog0${n}Cta`,   { opacity:0, y:16 },  { opacity:1, y:0, duration:.7 }, .66);
+        cardTl[n] = tl;
       }
 
-      /* ── Saída suave ao subir (substitui snap instantâneo) ── */
+      /* ── Saída suave ao subir ── */
       function animateCardOut(n) {
-        gsap.killTweensOf(`#progCard0${n} .prog-card-bg`);
+        /* FIX 1+2: mata timeline inteiro antes de criar novo */
+        if (cardTl[n]) cardTl[n].kill();
+
         const tl = gsap.timeline({ defaults:{ ease:'power2.in' } });
-        /* conteúdo some rapidamente */
         tl.to([
           `#prog0${n}Level`, `#prog0${n}Name`,
           `#prog0${n}Stats`, `#prog0${n}Int`, `#prog0${n}Cta`
-        ], { opacity:0, duration:.28, stagger:.02 }, 0);
-        if (n === 3) tl.to('#prog03Excl', { opacity:0, duration:.22 }, 0);
-        /* bg volta ao zoom inicial */
-        tl.to(`#progCard0${n} .prog-card-bg`, { scale:1.07, duration:.55 }, 0);
-        /* após saída: reposiciona para a próxima entrada */
+        ], { opacity:0, duration:.2, stagger:.015 }, 0);
+        if (n === 3) tl.to('#prog03Excl', { opacity:0, duration:.18 }, 0);
+        tl.to(`#progCard0${n} .prog-card-bg`, { scale:1.07, duration:.5 }, 0);
+        /* Reset posições após saída — FIX 4: Int incluído */
         tl.set(`#prog0${n}Level`,  { x:-24 });
         tl.set(`#prog0${n}Name`,   { y:40 });
         tl.set(`#prog0${n}Stats`,  { y:20 });
+        tl.set(`#prog0${n}Int`,    { opacity:0 });
         tl.set(`#prog0${n}Cta`,    { y:16 });
         tl.set(`#prog0${n}Level .prog-level-line`, { width:0 });
         if (n === 3) tl.set('#prog03Excl', { x:-24 });
+        cardTl[n] = tl;
       }
 
       if (isMobile) {
