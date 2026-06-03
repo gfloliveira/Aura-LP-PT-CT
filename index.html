@@ -1247,7 +1247,7 @@
     /* ── Scroll to Top ── */
     .scroll-top{
       position:fixed;
-      right:clamp(18px,3vw,36px);
+      left:50%;transform:translateX(-50%);
       bottom:clamp(18px,3vw,36px);
       width:42px;height:42px;
       display:flex;align-items:center;justify-content:center;
@@ -1267,7 +1267,7 @@
     /* ── WhatsApp flutuante ── */
     .wa-float{
       position:fixed;
-      left:clamp(18px,3vw,36px);
+      right:clamp(18px,3vw,36px);
       bottom:clamp(18px,3vw,36px);
       width:50px;height:50px;
       display:flex;align-items:center;justify-content:center;
@@ -1289,7 +1289,7 @@
     }
     .wa-float-tooltip{
       position:absolute;
-      left:calc(100% + 10px);
+      right:calc(100% + 10px);
       bottom:50%;transform:translateY(50%);
       background:rgba(10,10,10,.92);
       border:1px solid var(--color-border);
@@ -2847,18 +2847,23 @@
     (function initScrollTop() {
       const btn = document.getElementById('scrollTopBtn');
       const wa  = document.getElementById('waFloat');
+
+      /* WhatsApp aparece ao sair do hero */
       ScrollTrigger.create({
         trigger: '#hero',
         start: 'bottom 60%',
-        onEnter: () => {
-          gsap.to(btn, { opacity:1, pointerEvents:'auto', duration:.5, ease:'power3.out' });
-          gsap.to(wa,  { opacity:1, pointerEvents:'auto', duration:.5, ease:'power3.out', delay:.1 });
-        },
-        onLeaveBack: () => {
-          gsap.to(btn, { opacity:0, pointerEvents:'none', duration:.35 });
-          gsap.to(wa,  { opacity:0, pointerEvents:'none', duration:.35 });
-        }
+        onEnter:     () => gsap.to(wa, { opacity:1, pointerEvents:'auto', duration:.5, ease:'power3.out' }),
+        onLeaveBack: () => gsap.to(wa, { opacity:0, pointerEvents:'none', duration:.35 })
       });
+
+      /* Scroll-to-top aparece a partir da seção 2 (manifesto) */
+      ScrollTrigger.create({
+        trigger: '#manifesto',
+        start: 'top 80%',
+        onEnter:     () => gsap.to(btn, { opacity:1, pointerEvents:'auto', duration:.5, ease:'power3.out' }),
+        onLeaveBack: () => gsap.to(btn, { opacity:0, pointerEvents:'none', duration:.35 })
+      });
+
       btn.addEventListener('click', () => lenis.scrollTo(0, { duration:2, easing: t => 1 - Math.pow(1-t,4) }));
     })();
 
