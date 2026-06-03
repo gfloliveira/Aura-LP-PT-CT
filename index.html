@@ -4,6 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="APEX — Elite Training Club. Treinamento de alta performance para indivíduos que recusam a mediocridade. Metodologia baseada em ciência, forjada em disciplina absoluta." />
+  <meta property="og:type"        content="website" />
+  <meta property="og:title"       content="APEX — Redefina Seu Limite" />
+  <meta property="og:description" content="Treinamento de alta performance para indivíduos que recusam a mediocridade. Metodologia baseada em ciência, forjada em disciplina absoluta." />
+  <meta property="og:url"         content="https://gfloliveira.github.io/Aura-LP-PT-CT/" />
+  <meta property="og:image"       content="https://gfloliveira.github.io/Aura-LP-PT-CT/assets/og-image.jpg" />
+  <meta name="twitter:card"       content="summary_large_image" />
+  <meta name="twitter:title"      content="APEX — Redefina Seu Limite" />
+  <meta name="twitter:description"content="Treinamento de alta performance para indivíduos que recusam a mediocridade." />
+  <link rel="canonical"           href="https://gfloliveira.github.io/Aura-LP-PT-CT/" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230A0A0A'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='sans-serif' font-weight='700' font-size='18' fill='%23FF4500'%3EA%3C/text%3E%3C/svg%3E" />
   <title>APEX — Redefina Seu Limite</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -1462,6 +1472,16 @@
       .blob--3{display:none;}
       .blob--4{width:120vw;height:120vw;filter:blur(75px);}
     }
+    /* ── PREFERS-REDUCED-MOTION ──────────────────────────────────────────── */
+    @media(prefers-reduced-motion:reduce){
+      *,*::before,*::after{
+        animation-duration:.01ms !important;
+        animation-iteration-count:1 !important;
+        transition-duration:.01ms !important;
+      }
+      .blob{animation:none !important;}
+      html{scroll-behavior:auto !important;}
+    }
   </style>
 </head>
 <body>
@@ -1483,7 +1503,7 @@
   </div>
 
   <nav class="nav" id="nav">
-    <a href="#" class="nav-logo">APEX<em>.</em></a>
+    <a href="#hero" class="nav-logo" data-nav-target="hero">APEX<em>.</em></a>
     <ul class="nav-links">
       <li><a href="#manifesto" data-nav-target="manifesto">Filosofia</a></li>
       <li><a href="#programs"  data-nav-target="programs">Programas</a></li>
@@ -1739,7 +1759,7 @@
               </div>
             </div>
             <div class="prog-cta-row" id="prog01Cta">
-              <button class="prog-cta"><span class="prog-cta-txt">Iniciar</span><span class="prog-cta-arr"><span class="prog-cta-line"></span><span class="prog-cta-head"></span></span></button>
+              <button class="prog-cta" data-nav-target="ctaFinal"><span class="prog-cta-txt">Iniciar</span><span class="prog-cta-arr"><span class="prog-cta-line"></span><span class="prog-cta-head"></span></span></button>
               <span class="prog-duration-tag">12 semanas</span>
             </div>
           </div>
@@ -1785,7 +1805,7 @@
               </div>
             </div>
             <div class="prog-cta-row" id="prog02Cta">
-              <button class="prog-cta"><span class="prog-cta-txt">Iniciar</span><span class="prog-cta-arr"><span class="prog-cta-line"></span><span class="prog-cta-head"></span></span></button>
+              <button class="prog-cta" data-nav-target="ctaFinal"><span class="prog-cta-txt">Iniciar</span><span class="prog-cta-arr"><span class="prog-cta-line"></span><span class="prog-cta-head"></span></span></button>
               <span class="prog-duration-tag">8 semanas</span>
             </div>
           </div>
@@ -1832,7 +1852,7 @@
               </div>
             </div>
             <div class="prog-cta-row" id="prog03Cta">
-              <button class="prog-cta"><span class="prog-cta-txt">Iniciar</span><span class="prog-cta-arr"><span class="prog-cta-line"></span><span class="prog-cta-head"></span></span></button>
+              <button class="prog-cta" data-nav-target="ctaFinal"><span class="prog-cta-txt">Iniciar</span><span class="prog-cta-arr"><span class="prog-cta-line"></span><span class="prog-cta-head"></span></span></button>
               <span class="prog-duration-tag">16 semanas</span>
             </div>
           </div>
@@ -1993,7 +2013,7 @@
     <div class="footer-top">
 
       <div class="footer-brand">
-        <a href="#" class="footer-logo">APEX<em>.</em></a>
+        <a href="#hero" class="footer-logo" data-nav-target="hero">APEX<em>.</em></a>
         <p class="footer-tagline">Elite Training Club</p>
       </div>
 
@@ -2288,8 +2308,8 @@
     const scrollLine = document.getElementById('navScrollLine');
 
     function navScrollTo(targetId, originEl) {
-      const target = document.getElementById(targetId);
-      if (!target) return;
+      const target = targetId === 'hero' ? 0 : document.getElementById(targetId);
+      if (target !== 0 && !target) return;
 
       /* feedback visual: elemento clicado pisca em laranja */
       if (originEl) {
