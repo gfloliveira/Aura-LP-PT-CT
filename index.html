@@ -277,12 +277,6 @@
     .athlete-label-text{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--color-text-muted);font-weight:500;}
 
     /* Orange accent corner */
-    .athlete-corner{
-      position:absolute;top:32px;right:32px;z-index:3;
-      display:flex;flex-direction:column;align-items:flex-end;gap:6px;
-    }
-    .athlete-corner-tag{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--color-primary);font-weight:600;}
-    .athlete-corner-line{width:24px;height:1px;background:var(--color-primary);}
 
     /* Orange vertical accent bar */
     .athlete-bar{
@@ -1012,6 +1006,8 @@
       display:flex;flex-direction:column;gap:18px;
       background:var(--color-bg);
       transition:border-color .3s ease;
+      transform-style:preserve-3d;
+      will-change:transform;
     }
     .test-card:hover{border-color:rgba(255,69,0,.3);}
 
@@ -1666,10 +1662,6 @@
             <div class="athlete-label-line"></div>
           </div>
 
-          <div class="athlete-corner">
-            <span class="athlete-corner-tag">Elite</span>
-            <div class="athlete-corner-line"></div>
-          </div>
 
           <div class="athlete-bar"></div>
         </div>
@@ -1695,7 +1687,7 @@
         </svg>
         <div class="badge-orbit-center"><div class="badge-orbit-dot"></div></div>
       </div>
-      <div class="badge-text"><strong>Awwwards Level</strong>Design &amp; Perf.</div>
+      <div class="badge-text"><strong>Carlos Mendes</strong>Fundador &amp; Head Coach</div>
     </div>
 
   </section>
@@ -2825,6 +2817,31 @@
       stars.textContent = '★★★★★';
       card.querySelector('.test-card-header').after(stars);
     });
+
+    /* ─── TILT 3D NOS CARDS DE DEPOIMENTO ───────────────────────────────────── */
+    if (!isTouch) {
+      document.querySelectorAll('.test-card').forEach(card => {
+        card.addEventListener('mousemove', e => {
+          const r = card.getBoundingClientRect();
+          const dx = (e.clientX - (r.left + r.width  / 2)) / (r.width  / 2);
+          const dy = (e.clientY - (r.top  + r.height / 2)) / (r.height / 2);
+          gsap.to(card, {
+            rotateY: dx * 7,
+            rotateX: -dy * 5,
+            transformPerspective: 900,
+            duration: 0.35,
+            ease: 'power2.out'
+          });
+        });
+        card.addEventListener('mouseleave', () => {
+          gsap.to(card, {
+            rotateY: 0, rotateX: 0,
+            duration: 0.7,
+            ease: 'elastic.out(1, 0.45)'
+          });
+        });
+      });
+    }
 
     /* ─── NAV SEÇÃO ATIVA ───────────────────────────────────────────────────── */
     (function initActiveNav() {
