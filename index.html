@@ -2532,8 +2532,9 @@
       /* Estado inicial: bg levemente zoom-in em todos os cards */
       gsap.set('.prog-card-bg', { scale:1.07 });
 
-      /* ── Content entrance animation per card ── */
+      /* ── Entrada de card ── */
       function animateCardIn(n) {
+        gsap.killTweensOf(`#progCard0${n} .prog-card-bg`);
         const tl = gsap.timeline({ defaults:{ ease:'power3.out' } });
         tl.to(`#progCard0${n} .prog-card-bg`, { scale:1, duration:1.5, ease:'power3.out' }, 0);
         tl.to(`#prog0${n}Level`,  { opacity:1, x:0,  duration:.7 }, 0);
@@ -2545,46 +2546,55 @@
         tl.to(`#prog0${n}Cta`,    { opacity:1, y:0,  duration:.7 }, .66);
       }
 
-      function resetCardIn(n) {
-        gsap.set(`#progCard0${n} .prog-card-bg`, { scale:1.07 });
-        gsap.set(`#prog0${n}Level`,  { opacity:0, x:-24 });
-        gsap.set(`#prog0${n}Level .prog-level-line`, { width:0 });
-        if (n === 3) gsap.set('#prog03Excl', { opacity:0, x:-24 });
-        gsap.set(`#prog0${n}Name`,   { opacity:0, y:40 });
-        gsap.set(`#prog0${n}Stats`,  { opacity:0, y:20 });
-        gsap.set(`#prog0${n}Int`,    { opacity:0 });
-        gsap.set(`#prog0${n}Cta`,    { opacity:0, y:16 });
+      /* ── Saída suave ao subir (substitui snap instantâneo) ── */
+      function animateCardOut(n) {
+        gsap.killTweensOf(`#progCard0${n} .prog-card-bg`);
+        const tl = gsap.timeline({ defaults:{ ease:'power2.in' } });
+        /* conteúdo some rapidamente */
+        tl.to([
+          `#prog0${n}Level`, `#prog0${n}Name`,
+          `#prog0${n}Stats`, `#prog0${n}Int`, `#prog0${n}Cta`
+        ], { opacity:0, duration:.28, stagger:.02 }, 0);
+        if (n === 3) tl.to('#prog03Excl', { opacity:0, duration:.22 }, 0);
+        /* bg volta ao zoom inicial */
+        tl.to(`#progCard0${n} .prog-card-bg`, { scale:1.07, duration:.55 }, 0);
+        /* após saída: reposiciona para a próxima entrada */
+        tl.set(`#prog0${n}Level`,  { x:-24 });
+        tl.set(`#prog0${n}Name`,   { y:40 });
+        tl.set(`#prog0${n}Stats`,  { y:20 });
+        tl.set(`#prog0${n}Cta`,    { y:16 });
+        tl.set(`#prog0${n}Level .prog-level-line`, { width:0 });
+        if (n === 3) tl.set('#prog03Excl', { x:-24 });
       }
 
       if (isMobile) {
-        /* Mobile: cards scroll normally — trigger each on enter */
+        /* Mobile: cards scroll normalmente */
         [1, 2, 3].forEach(n => {
           ScrollTrigger.create({
             trigger: `#progCard0${n}`,
             start: 'top 78%',
-            toggleActions: 'play none none reverse',
             onEnter:     () => animateCardIn(n),
-            onLeaveBack: () => resetCardIn(n)
+            onLeaveBack: () => animateCardOut(n)
           });
         });
         return;
       }
 
-      /* Desktop: card 1 when section enters */
+      /* Desktop: card 1 quando a seção entra */
       ScrollTrigger.create({
         trigger: '#programsStack',
         start: 'top 80%',
-        onEnter: () => animateCardIn(1),
-        onLeaveBack: () => resetCardIn(1)
+        onEnter:     () => animateCardIn(1),
+        onLeaveBack: () => animateCardOut(1)
       });
 
-      /* Desktop: cards 2 & 3 when they become the top sticky card */
+      /* Desktop: cards 2 & 3 quando sobem para o topo */
       [2, 3].forEach(n => {
         ScrollTrigger.create({
           trigger: `#progCard0${n}`,
           start: 'top top',
           onEnter:     () => animateCardIn(n),
-          onLeaveBack: () => resetCardIn(n)
+          onLeaveBack: () => animateCardOut(n)
         });
       });
 
