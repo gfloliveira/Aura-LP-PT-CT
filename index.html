@@ -2597,36 +2597,28 @@
         onLeaveBack: () => animateCardOut(1)
       });
 
+      /* Darkening refs — separados de cardTl para não conflitarem */
+      const coverTl = {};
+
+      function darkenCard(n) {
+        if (coverTl[n]) coverTl[n].kill();
+        coverTl[n] = gsap.timeline();
+        coverTl[n].to(`#progInner0${n}`, { scale:.96, filter:'brightness(0.65)', duration:.8, ease:'power2.inOut' });
+      }
+      function undarkenCard(n) {
+        if (coverTl[n]) coverTl[n].kill();
+        coverTl[n] = gsap.timeline();
+        coverTl[n].to(`#progInner0${n}`, { scale:1, filter:'brightness(1)', duration:.4, ease:'power2.out' });
+      }
+
       /* Desktop: cards 2 & 3 quando sobem para o topo */
       [2, 3].forEach(n => {
         ScrollTrigger.create({
           trigger: `#progCard0${n}`,
           start: 'top top',
-          onEnter:     () => animateCardIn(n),
-          onLeaveBack: () => animateCardOut(n)
+          onEnter:     () => { animateCardIn(n);  darkenCard(n - 1); },
+          onLeaveBack: () => { animateCardOut(n); undarkenCard(n - 1); }
         });
-      });
-
-      /* Scale-back on cards being covered */
-      gsap.to('#progInner01', {
-        scale: .96, filter: 'brightness(0.65)',
-        ease: 'none',
-        scrollTrigger: {
-          trigger: '#progCard02',
-          start: 'top 55%',
-          end:   'top top',
-          scrub: 1
-        }
-      });
-      gsap.to('#progInner02', {
-        scale: .96, filter: 'brightness(0.65)',
-        ease: 'none',
-        scrollTrigger: {
-          trigger: '#progCard03',
-          start: 'top 55%',
-          end:   'top top',
-          scrub: 1
-        }
       });
     }
     initPrograms();
